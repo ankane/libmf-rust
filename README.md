@@ -75,6 +75,20 @@ Perform cross-validation
 model.cv(&data, 5);
 ```
 
+## Metrics
+
+Calculate RMSE
+
+```rust
+model.rmse(&data);
+```
+
+Calculate MAE
+
+```rust
+model.mae(&data);
+```
+
 ## Parameters
 
 Set parameters - default values below
