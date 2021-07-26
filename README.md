@@ -160,6 +160,24 @@ Calculate AUC (for one-class MF)
 model.auc(&data, transpose);
 ```
 
+## Disk-Level Training
+
+Train directly from files
+
+```ruby
+model.fit_disk("train.txt")
+model.fit_eval_disk("train.txt", "validate.txt")
+model.cv_disk("train.txt")
+```
+
+Data should be in the format `row_index column_index value`:
+
+```txt
+0 0 5.0
+0 2 3.5
+1 1 4.0
+```
+
 ## Reference
 
 Specify the initial capacity for a matrix
