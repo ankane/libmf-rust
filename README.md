@@ -165,9 +165,9 @@ model.auc(&data, transpose);
 Train directly from files
 
 ```ruby
-model.fit_disk("train.txt")
-model.fit_eval_disk("train.txt", "validate.txt")
-model.cv_disk("train.txt")
+model.fit_disk("train.txt");
+model.fit_eval_disk("train.txt", "validate.txt");
+model.cv_disk("train.txt");
 ```
 
 Data should be in the format `row_index column_index value`:
