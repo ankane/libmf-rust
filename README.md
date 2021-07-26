@@ -75,6 +75,47 @@ Perform cross-validation
 model.cv(&data, 5);
 ```
 
+## Parameters
+
+Set parameters - default values below
+
+```rust
+model.loss = 0;                // loss function
+model.factors = 8;             // number of latent factors
+model.threads = 12;            // number of threads used
+model.bins = 25;               // number of bins
+model.iterations = 20;         // number of iterations
+model.lambda_p1 = 0;           // coefficient of L1-norm regularization on P
+model.lambda_p2 = 0.1;         // coefficient of L2-norm regularization on P
+model.lambda_q1 = 0;           // coefficient of L1-norm regularization on Q
+model.lambda_q2 = 0.1;         // coefficient of L2-norm regularization on Q
+model.learning_rate = 0.1;     // learning rate
+model.alpha = 0.1;             // importance of negative entries
+model.c = 0.0001;              // desired value of negative entries
+model.nmf = false;             // perform non-negative MF (NMF)
+model.quiet = false;           // no outputs to stdout
+```
+
+### Loss Functions
+
+For real-valued matrix factorization
+
+- 0 - squared error (L2-norm)
+- 1 - absolute error (L1-norm)
+- 2 - generalized KL-divergence
+
+For binary matrix factorization
+
+- 5 - logarithmic error
+- 6 - squared hinge loss
+- 7 - hinge loss
+
+For one-class matrix factorization
+
+- 10 - row-oriented pair-wise logarithmic loss
+- 11 - column-oriented pair-wise logarithmic loss
+- 12 - squared error (L2-norm)
+
 ## Metrics
 
 Calculate RMSE (for real-valued MF)
@@ -118,47 +159,6 @@ Calculate AUC (for one-class MF)
 ```rust
 model.auc(&data, transpose);
 ```
-
-## Parameters
-
-Set parameters - default values below
-
-```rust
-model.loss = 0;                // loss function
-model.factors = 8;             // number of latent factors
-model.threads = 12;            // number of threads used
-model.bins = 25;               // number of bins
-model.iterations = 20;         // number of iterations
-model.lambda_p1 = 0;           // coefficient of L1-norm regularization on P
-model.lambda_p2 = 0.1;         // coefficient of L2-norm regularization on P
-model.lambda_q1 = 0;           // coefficient of L1-norm regularization on Q
-model.lambda_q2 = 0.1;         // coefficient of L2-norm regularization on Q
-model.learning_rate = 0.1;     // learning rate
-model.alpha = 0.1;             // importance of negative entries
-model.c = 0.0001;              // desired value of negative entries
-model.nmf = false;             // perform non-negative MF (NMF)
-model.quiet = false;           // no outputs to stdout
-```
-
-### Loss Functions
-
-For real-valued matrix factorization
-
-- 0 - squared error (L2-norm)
-- 1 - absolute error (L1-norm)
-- 2 - generalized KL-divergence
-
-For binary matrix factorization
-
-- 5 - logarithmic error
-- 6 - squared hinge loss
-- 7 - hinge loss
-
-For one-class matrix factorization
-
-- 10 - row-oriented pair-wise logarithmic loss
-- 11 - column-oriented pair-wise logarithmic loss
-- 12 - squared error (L2-norm)
 
 ## Reference
 
