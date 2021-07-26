@@ -35,31 +35,15 @@ impl Model {
         self.model = unsafe { mf_train(&prob, self.param()) };
     }
 
-    pub fn fit_disk(&mut self, path: &str) {
-        let cpath = CString::new(path).expect("CString::new failed");
-        self.model = unsafe { mf_train_on_disk(cpath.as_ptr(), self.param()) };
-    }
-
     pub fn fit_eval(&mut self, train_set: &Matrix, eval_set: &Matrix) {
         let tr = train_set.to_problem();
         let va = eval_set.to_problem();
         self.model = unsafe { mf_train_with_validation(&tr, &va, self.param()) };
     }
 
-    pub fn fit_eval_disk(&mut self, train_path: &str, eval_path: &str) {
-        let trpath = CString::new(train_path).expect("CString::new failed");
-        let vapath = CString::new(eval_path).expect("CString::new failed");
-        self.model = unsafe { mf_train_with_validation_on_disk(trpath.as_ptr(), vapath.as_ptr(), self.param()) };
-    }
-
     pub fn cv(&mut self, data: &Matrix, folds: i32) {
         let prob = data.to_problem();
         unsafe { mf_cross_validation(&prob, folds, self.param()); }
-    }
-
-    pub fn cv_disk(&mut self, path: &str, folds: i32) {
-        let cpath = CString::new(path).expect("CString::new failed");
-        unsafe { mf_cross_validation_on_disk(cpath.as_ptr(), folds, self.param()); }
     }
 
     pub fn predict(&self, row_index: i32, column_index: i32) -> f32 {
@@ -212,9 +196,6 @@ impl Model {
 mod tests {
     use crate::{Matrix, Model};
 
-    const TRAIN_PATH: &str = "vendor/libmf/demo/real_matrix.tr.txt";
-    const EVAL_PATH: &str = "vendor/libmf/demo/real_matrix.te.txt";
-
     fn generate_data() -> Matrix {
         let mut data = Matrix::new();
         data.push(0, 0, 1.0);
@@ -237,13 +218,6 @@ mod tests {
     }
 
     #[test]
-    fn test_fit_disk() {
-        let mut model = Model::new();
-        model.quiet = true;
-        model.fit_disk(TRAIN_PATH);
-    }
-
-    #[test]
     fn test_fit_eval() {
         let data = generate_data();
         let mut model = Model::new();
@@ -252,25 +226,11 @@ mod tests {
     }
 
     #[test]
-    fn test_fit_eval_disk() {
-        let mut model = Model::new();
-        model.quiet = true;
-        model.fit_eval_disk(TRAIN_PATH, EVAL_PATH);
-    }
-
-    #[test]
     fn test_cv() {
         let data = generate_data();
         let mut model = Model::new();
         model.quiet = true;
         model.cv(&data, 5);
-    }
-
-    #[test]
-    fn test_cv_disk() {
-        let mut model = Model::new();
-        model.quiet = true;
-        model.cv_disk(TRAIN_PATH, 5);
     }
 
     #[test]
