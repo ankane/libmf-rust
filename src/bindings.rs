@@ -60,4 +60,9 @@ extern "C" {
     pub fn mf_predict(model: *const MfModel, u: c_int, v: c_int) -> c_float;
     pub fn calc_rmse(prob: *const MfProblem, model: *const MfModel) -> c_double;
     pub fn calc_mae(prob: *const MfProblem, model: *const MfModel) -> c_double;
+    pub fn calc_gkl(prob: *const MfProblem, model: *const MfModel) -> c_double;
+    pub fn calc_logloss(prob: *const MfProblem, model: *const MfModel) -> c_double;
+    pub fn calc_accuracy(prob: *const MfProblem, model: *const MfModel) -> c_double;
+    pub fn calc_mpr(prob: *const MfProblem, model: *const MfModel, tranpose: bool) -> c_double;
+    pub fn calc_auc(prob: *const MfProblem, model: *const MfModel, tranpose: bool) -> c_double;
 }

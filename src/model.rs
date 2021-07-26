@@ -117,6 +117,36 @@ impl Model {
         unsafe { calc_mae(&prob, self.model) }
     }
 
+    pub fn gkl(&self, data: &Matrix) -> f64 {
+        assert!(self.is_fit());
+        let prob = data.to_problem();
+        unsafe { calc_gkl(&prob, self.model) }
+    }
+
+    pub fn logloss(&self, data: &Matrix) -> f64 {
+        assert!(self.is_fit());
+        let prob = data.to_problem();
+        unsafe { calc_logloss(&prob, self.model) }
+    }
+
+    pub fn accuracy(&self, data: &Matrix) -> f64 {
+        assert!(self.is_fit());
+        let prob = data.to_problem();
+        unsafe { calc_accuracy(&prob, self.model) }
+    }
+
+    pub fn mpr(&self, data: &Matrix, tranpose: bool) -> f64 {
+        assert!(self.is_fit());
+        let prob = data.to_problem();
+        unsafe { calc_mpr(&prob, self.model, tranpose) }
+    }
+
+    pub fn auc(&self, data: &Matrix, tranpose: bool) -> f64 {
+        assert!(self.is_fit());
+        let prob = data.to_problem();
+        unsafe { calc_auc(&prob, self.model, tranpose) }
+    }
+
     fn with_model(model: *const MfModel) -> Self {
         let param = unsafe { mf_get_default_param() };
         Self {
@@ -227,6 +257,11 @@ mod tests {
 
         assert!(model.rmse(&data) < 0.15);
         assert!(model.mae(&data) < 0.15);
+        assert!(model.gkl(&data) < 0.01);
+        assert!(model.logloss(&data) < 0.3);
+        assert_eq!(1.0, model.accuracy(&data));
+        assert_eq!(0.0, model.mpr(&data, false));
+        assert_eq!(1.0, model.auc(&data, false));
     }
 
     #[test]

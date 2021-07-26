@@ -77,16 +77,46 @@ model.cv(&data, 5);
 
 ## Metrics
 
-Calculate RMSE
+Calculate RMSE (for real-valued MF)
 
 ```rust
 model.rmse(&data);
 ```
 
-Calculate MAE
+Calculate MAE (for real-valued MF)
 
 ```rust
 model.mae(&data);
+```
+
+Calculate generalized KL-divergence (for non-negative real-valued MF)
+
+```rust
+model.gkl(&data);
+```
+
+Calculate logarithmic loss (for binary MF)
+
+```rust
+model.logloss(&data);
+```
+
+Calculate accuracy (for binary MF)
+
+```rust
+model.accuracy(&data);
+```
+
+Calculate MPR (for one-class MF)
+
+```rust
+model.mpr(&data, transpose);
+```
+
+Calculate AUC (for one-class MF)
+
+```rust
+model.auc(&data, transpose);
 ```
 
 ## Parameters
