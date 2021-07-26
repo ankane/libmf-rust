@@ -54,6 +54,7 @@ extern "C" {
     pub fn mf_get_default_param() -> MfParameter;
     pub fn mf_save_model(model: *const MfModel, path: *const c_char) -> c_int;
     pub fn mf_load_model(path: *const c_char) -> *mut MfModel;
+    pub fn mf_destroy_model(model: *mut *mut MfModel);
     pub fn mf_train(prob: *const MfProblem, param: MfParameter) -> *mut MfModel;
     pub fn mf_train_with_validation(tr: *const MfProblem, va: *const MfProblem, param: MfParameter) -> *mut MfModel;
     pub fn mf_cross_validation(prob: *const MfProblem, nr_folds: c_int, param: MfParameter) -> c_double;
