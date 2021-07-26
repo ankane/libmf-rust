@@ -63,6 +63,6 @@ extern "C" {
     pub fn calc_gkl(prob: *const MfProblem, model: *const MfModel) -> c_double;
     pub fn calc_logloss(prob: *const MfProblem, model: *const MfModel) -> c_double;
     pub fn calc_accuracy(prob: *const MfProblem, model: *const MfModel) -> c_double;
-    pub fn calc_mpr(prob: *const MfProblem, model: *const MfModel, tranpose: bool) -> c_double;
-    pub fn calc_auc(prob: *const MfProblem, model: *const MfModel, tranpose: bool) -> c_double;
+    pub fn calc_mpr(prob: *const MfProblem, model: *const MfModel, transpose: bool) -> c_double;
+    pub fn calc_auc(prob: *const MfProblem, model: *const MfModel, transpose: bool) -> c_double;
 }

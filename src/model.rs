@@ -135,16 +135,16 @@ impl Model {
         unsafe { calc_accuracy(&prob, self.model) }
     }
 
-    pub fn mpr(&self, data: &Matrix, tranpose: bool) -> f64 {
+    pub fn mpr(&self, data: &Matrix, transpose: bool) -> f64 {
         assert!(self.is_fit());
         let prob = data.to_problem();
-        unsafe { calc_mpr(&prob, self.model, tranpose) }
+        unsafe { calc_mpr(&prob, self.model, transpose) }
     }
 
-    pub fn auc(&self, data: &Matrix, tranpose: bool) -> f64 {
+    pub fn auc(&self, data: &Matrix, transpose: bool) -> f64 {
         assert!(self.is_fit());
         let prob = data.to_problem();
-        unsafe { calc_auc(&prob, self.model, tranpose) }
+        unsafe { calc_auc(&prob, self.model, transpose) }
     }
 
     fn with_model(model: *const MfModel) -> Self {
