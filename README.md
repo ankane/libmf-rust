@@ -9,7 +9,7 @@
 Add this line to your application’s `Cargo.toml` under `[dependencies]`:
 
 ```toml
-libmf = { version = "0.1" }
+libmf = "0.1"
 ```
 
 ## Getting Started
