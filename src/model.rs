@@ -196,7 +196,7 @@ impl Model {
     fn destroy_model(&mut self) {
         if !self.model.is_null() {
             unsafe { mf_destroy_model(&mut self.model) };
-            self.model = std::ptr::null_mut();
+            assert!(self.model.is_null());
         }
     }
 }
