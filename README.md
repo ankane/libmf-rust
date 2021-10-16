@@ -23,11 +23,10 @@ data.push(0, 2, 3.5);
 data.push(1, 1, 4.0);
 ```
 
-Create a model
+Fit a model
 
 ```rust
-let mut model = libmf::Model::new();
-model.fit(&data);
+let model = libmf::Model::params().fit(&data);
 ```
 
 Make predictions
@@ -64,7 +63,7 @@ let model = libmf::Model::load("model.txt");
 Pass a validation set
 
 ```rust
-model.fit_eval(&train_set, &eval_set);
+let model = libmf::Model::params().fit_eval(&train_set, &eval_set);
 ```
 
 ## Cross-Validation
@@ -72,7 +71,7 @@ model.fit_eval(&train_set, &eval_set);
 Perform cross-validation
 
 ```rust
-model.cv(&data, 5);
+libmf::Model::params().cv(&data, 5);
 ```
 
 ## Parameters
@@ -80,20 +79,21 @@ model.cv(&data, 5);
 Set parameters - default values below
 
 ```rust
-model.loss = 0;                // loss function
-model.factors = 8;             // number of latent factors
-model.threads = 12;            // number of threads used
-model.bins = 25;               // number of bins
-model.iterations = 20;         // number of iterations
-model.lambda_p1 = 0;           // coefficient of L1-norm regularization on P
-model.lambda_p2 = 0.1;         // coefficient of L2-norm regularization on P
-model.lambda_q1 = 0;           // coefficient of L1-norm regularization on Q
-model.lambda_q2 = 0.1;         // coefficient of L2-norm regularization on Q
-model.learning_rate = 0.1;     // learning rate
-model.alpha = 0.1;             // importance of negative entries
-model.c = 0.0001;              // desired value of negative entries
-model.nmf = false;             // perform non-negative MF (NMF)
-model.quiet = false;           // no outputs to stdout
+libmf::Model::params()
+    .loss(0)                // loss function
+    .factors(8)             // number of latent factors
+    .threads(12)            // number of threads used
+    .bins(25)               // number of bins
+    .iterations(20)         // number of iterations
+    .lambda_p1(0.0)         // coefficient of L1-norm regularization on P
+    .lambda_p2(0.1)         // coefficient of L2-norm regularization on P
+    .lambda_q1(0.0)         // coefficient of L1-norm regularization on Q
+    .lambda_q2(0.1)         // coefficient of L2-norm regularization on Q
+    .learning_rate(0.1)     // learning rate
+    .alpha(0.1)             // importance of negative entries
+    .c(0.0001)              // desired value of negative entries
+    .nmf(false)             // perform non-negative MF (NMF)
+    .quiet(false);          // no outputs to stdout
 ```
 
 ### Loss Functions
@@ -171,6 +171,24 @@ let mut data = libmf::Matrix::with_capacity(3);
 ## Resources
 
 - [LIBMF: A Library for Parallel Matrix Factorization in Shared-memory Systems](https://www.csie.ntu.edu.tw/~cjlin/papers/libmf/libmf_open_source.pdf)
+
+## Upgrading
+
+### 0.2.0
+
+Use
+
+```rust
+let model = libmf::Model::params().factors(20).fit(&data);
+```
+
+instead of
+
+```rust
+let model = libmf::Model::new();
+model.factors = 20;
+model.fit(&data);
+```
 
 ## History
 

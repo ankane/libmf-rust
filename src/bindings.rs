@@ -20,6 +20,7 @@ pub struct MfProblem
 }
 
 #[repr(C)]
+#[derive(Clone, Copy)]
 pub struct MfParameter {
     pub fun: c_int,
     pub k: c_int,

@@ -5,6 +5,8 @@
 mod bindings;
 mod matrix;
 mod model;
+mod params;
 
 pub use matrix::Matrix;
 pub use model::Model;
+pub use params::Params;
