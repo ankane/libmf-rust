@@ -6,7 +6,7 @@ pub struct Params {
 }
 
 impl Params {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         let mut param = unsafe { mf_get_default_param() };
         param.nr_bins = 25;
         Self {
