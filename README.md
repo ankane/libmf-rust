@@ -185,7 +185,7 @@ let model = libmf::Model::params().factors(20).fit(&data);
 instead of
 
 ```rust
-let model = libmf::Model::new();
+let mut model = libmf::Model::new();
 model.factors = 20;
 model.fit(&data);
 ```
