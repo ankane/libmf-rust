@@ -51,7 +51,7 @@ model.bias();
 Save the model to a file
 
 ```rust
-model.save("model.txt");
+model.save("model.txt").unwrap();
 ```
 
 Load the model from a file

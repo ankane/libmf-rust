@@ -25,9 +25,14 @@ impl Model {
         unsafe { mf_predict(self.model, row_index, column_index) }
     }
 
-    pub fn save(&self, path: &str) {
+    pub fn save(&self, path: &str) -> Result<(), Error> {
         let cpath = CString::new(path).expect("CString::new failed");
-        unsafe { mf_save_model(self.model, cpath.as_ptr()); }
+        let status = unsafe { mf_save_model(self.model, cpath.as_ptr()) };
+        if status != 0 {
+            Err(Error("Cannot save model".to_string()))
+        } else {
+            Ok(())
+        }
     }
 
     pub fn rows(&self) -> i32 {
@@ -137,12 +142,20 @@ mod tests {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        model.save("/tmp/model.txt");
+        model.save("/tmp/model.txt").unwrap();
         let model = Model::load("/tmp/model.txt").unwrap();
 
         model.p_factors();
         model.q_factors();
         model.bias();
+    }
+
+    #[test]
+    fn test_save_missing() {
+        let data = generate_data();
+        let model = Model::params().quiet(true).fit(&data).unwrap();
+        let result = model.save("/tmp/missing/model.txt");
+        assert!(result.is_err());
     }
 
     #[test]
