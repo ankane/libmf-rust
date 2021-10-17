@@ -134,7 +134,9 @@ mod tests {
     #[test]
     fn test_cv() {
         let data = generate_data();
-        Model::params().quiet(true).cv(&data, 5);
+        let avg_error = Model::params().quiet(true).cv(&data, 5).unwrap();
+        // not enough data
+        assert!(avg_error.is_nan());
     }
 
     #[test]
@@ -220,7 +222,7 @@ mod tests {
     #[test]
     fn test_cv_bad_loss() {
         let data = generate_data();
-        // no way to detect error
-        Model::params().loss(13).cv(&data, 5);
+        let result = Model::params().loss(13).cv(&data, 5);
+        assert!(result.is_err());
     }
 }

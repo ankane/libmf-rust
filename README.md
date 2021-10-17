@@ -71,7 +71,7 @@ let model = libmf::Model::params().fit_eval(&train_set, &eval_set).unwrap();
 Perform cross-validation
 
 ```rust
-libmf::Model::params().cv(&data, 5);
+let avg_error = libmf::Model::params().cv(&data, 5).unwrap();
 ```
 
 ## Parameters

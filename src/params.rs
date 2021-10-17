@@ -106,8 +106,13 @@ impl Params {
         }
     }
 
-    pub fn cv(&mut self, data: &Matrix, folds: i32) {
+    pub fn cv(&mut self, data: &Matrix, folds: i32) -> Result<f64, Error> {
         let prob = data.to_problem();
-        unsafe { mf_cross_validation(&prob, folds, self.param); }
+        let avg = unsafe { mf_cross_validation(&prob, folds, self.param) };
+        if avg == 0.0 {
+            Err(Error("Bad parameters".to_string()))
+        } else {
+            Ok(avg)
+        }
     }
 }
