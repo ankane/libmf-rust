@@ -12,7 +12,7 @@ impl Model {
     }
 
     pub fn load(path: &str) -> Result<Self, Error> {
-        let cpath = CString::new(path).expect("CString::new failed");
+        let cpath = CString::new(path)?;
         let model =  unsafe { mf_load_model(cpath.as_ptr()) };
         if model.is_null() {
             return Err(Error::Io);
@@ -25,7 +25,7 @@ impl Model {
     }
 
     pub fn save(&self, path: &str) -> Result<(), Error> {
-        let cpath = CString::new(path).expect("CString::new failed");
+        let cpath = CString::new(path)?;
         let status = unsafe { mf_save_model(self.model, cpath.as_ptr()) };
         if status != 0 {
             return Err(Error::Io);
