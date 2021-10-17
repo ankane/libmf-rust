@@ -104,7 +104,7 @@ impl Drop for Model {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Matrix, Model};
+    use crate::{Loss, Matrix, Model};
 
     fn generate_data() -> Matrix {
         let mut data = Matrix::new();
@@ -137,6 +137,13 @@ mod tests {
         let avg_error = Model::params().quiet(true).cv(&data, 5).unwrap();
         // not enough data
         assert!(avg_error.is_nan());
+    }
+
+    #[test]
+    fn test_loss() {
+        let data = generate_data();
+        let model = Model::params().loss(Loss::OneClassL2).quiet(true).fit(&data).unwrap();
+        assert_eq!(model.bias(), 0.0);
     }
 
     #[test]
@@ -206,23 +213,23 @@ mod tests {
     }
 
     #[test]
-    fn test_fit_bad_loss() {
+    fn test_fit_bad_params() {
         let data = generate_data();
-        let result = Model::params().loss(13).fit(&data);
+        let result = Model::params().factors(0).fit(&data);
         assert!(result.is_err());
     }
 
     #[test]
-    fn test_fit_eval_bad_loss() {
+    fn test_fit_eval_bad_params() {
         let data = generate_data();
-        let result = Model::params().loss(13).fit_eval(&data, &data);
+        let result = Model::params().factors(0).fit_eval(&data, &data);
         assert!(result.is_err());
     }
 
     #[test]
-    fn test_cv_bad_loss() {
+    fn test_cv_bad_params() {
         let data = generate_data();
-        let result = Model::params().loss(13).cv(&data, 5);
+        let result = Model::params().factors(0).cv(&data, 5);
         assert!(result.is_err());
     }
 }

@@ -20,7 +20,7 @@ pub struct MfProblem {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct MfParameter {
-    pub fun: c_int,
+    pub fun: Loss,
     pub k: c_int,
     pub nr_threads: c_int,
     pub nr_bins: c_int,
@@ -39,13 +39,27 @@ pub struct MfParameter {
 
 #[repr(C)]
 pub struct MfModel {
-    pub fun: c_int,
+    pub fun: Loss,
     pub m: c_int,
     pub n: c_int,
     pub k: c_int,
     pub b: c_float,
     pub p: *const c_float,
     pub q: *const c_float
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub enum Loss {
+    RealL2 = 0,
+    RealL1 = 1,
+    RealKL = 2,
+    BinaryLog = 5,
+    BinaryL2 = 6,
+    BinaryL1 = 7,
+    OneClassRow = 10,
+    OneClassCol = 11,
+    OneClassL2 = 12
 }
 
 extern "C" {

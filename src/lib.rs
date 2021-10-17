@@ -8,6 +8,7 @@ mod matrix;
 mod model;
 mod params;
 
+pub use bindings::Loss;
 pub use error::Error;
 pub use matrix::Matrix;
 pub use model::Model;

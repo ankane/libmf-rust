@@ -80,41 +80,41 @@ Set parameters - default values below
 
 ```rust
 libmf::Model::params()
-    .loss(0)                // loss function
-    .factors(8)             // number of latent factors
-    .threads(12)            // number of threads used
-    .bins(25)               // number of bins
-    .iterations(20)         // number of iterations
-    .lambda_p1(0.0)         // coefficient of L1-norm regularization on P
-    .lambda_p2(0.1)         // coefficient of L2-norm regularization on P
-    .lambda_q1(0.0)         // coefficient of L1-norm regularization on Q
-    .lambda_q2(0.1)         // coefficient of L2-norm regularization on Q
-    .learning_rate(0.1)     // learning rate
-    .alpha(0.1)             // importance of negative entries
-    .c(0.0001)              // desired value of negative entries
-    .nmf(false)             // perform non-negative MF (NMF)
-    .quiet(false);          // no outputs to stdout
+    .loss(libmf::Loss::RealL2)     // loss function
+    .factors(8)                    // number of latent factors
+    .threads(12)                   // number of threads used
+    .bins(25)                      // number of bins
+    .iterations(20)                // number of iterations
+    .lambda_p1(0.0)                // coefficient of L1-norm regularization on P
+    .lambda_p2(0.1)                // coefficient of L2-norm regularization on P
+    .lambda_q1(0.0)                // coefficient of L1-norm regularization on Q
+    .lambda_q2(0.1)                // coefficient of L2-norm regularization on Q
+    .learning_rate(0.1)            // learning rate
+    .alpha(0.1)                    // importance of negative entries
+    .c(0.0001)                     // desired value of negative entries
+    .nmf(false)                    // perform non-negative MF (NMF)
+    .quiet(false);                 // no outputs to stdout
 ```
 
 ### Loss Functions
 
 For real-valued matrix factorization
 
-- 0 - squared error (L2-norm)
-- 1 - absolute error (L1-norm)
-- 2 - generalized KL-divergence
+- `Loss::RealL2` - squared error (L2-norm)
+- `Loss::RealL1` - absolute error (L1-norm)
+- `Loss::RealKL` - generalized KL-divergence
 
 For binary matrix factorization
 
-- 5 - logarithmic error
-- 6 - squared hinge loss
-- 7 - hinge loss
+- `Loss::BinaryLog` - logarithmic error
+- `Loss::BinaryL2` - squared hinge loss
+- `Loss::BinaryL1` - hinge loss
 
 For one-class matrix factorization
 
-- 10 - row-oriented pair-wise logarithmic loss
-- 11 - column-oriented pair-wise logarithmic loss
-- 12 - squared error (L2-norm)
+- `Loss::OneClassRow` - row-oriented pair-wise logarithmic loss
+- `Loss::OneClassCol` - column-oriented pair-wise logarithmic loss
+- `Loss::OneClassL2` - squared error (L2-norm)
 
 ## Metrics
 

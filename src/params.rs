@@ -1,5 +1,5 @@
 use crate::bindings::*;
-use crate::{Error, Matrix, Model};
+use crate::{Error, Loss, Matrix, Model};
 
 pub struct Params {
     param: MfParameter
@@ -14,8 +14,7 @@ impl Params {
         }
     }
 
-    // TODO use enum
-    pub fn loss(&mut self, value: i32) -> &mut Self {
+    pub fn loss(&mut self, value: Loss) -> &mut Self {
         self.param.fun = value;
         self
     }

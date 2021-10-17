@@ -3,6 +3,7 @@
 - Changed pattern for fitting models - use `Model::params()` instead of `Model::new()`
 - Changed `fit`, `fit_eval`, `cv`, `save`, and `load` to return `Result`
 - Changed `cv` to return average error
+- Changed `loss` to use enum
 
 ## 0.1.1 (2021-07-27)
 
