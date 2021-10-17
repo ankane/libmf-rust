@@ -15,7 +15,7 @@ impl Model {
         let cpath = CString::new(path).expect("CString::new failed");
         let model =  unsafe { mf_load_model(cpath.as_ptr()) };
         if model.is_null() {
-            return Err(Error("Cannot open model".to_string()));
+            return Err(Error::Io);
         }
         Ok(Model { model })
     }
@@ -28,7 +28,7 @@ impl Model {
         let cpath = CString::new(path).expect("CString::new failed");
         let status = unsafe { mf_save_model(self.model, cpath.as_ptr()) };
         if status != 0 {
-            return Err(Error("Cannot save model".to_string()));
+            return Err(Error::Io);
         }
         Ok(())
     }

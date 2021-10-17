@@ -1,2 +1,6 @@
 #[derive(Debug)]
-pub struct Error(pub(crate) String);
+pub enum Error {
+    Io,
+    Parameter(String),
+    Unknown
+}
