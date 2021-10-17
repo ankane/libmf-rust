@@ -204,9 +204,23 @@ mod tests {
     }
 
     #[test]
-    fn test_bad_loss() {
+    fn test_fit_bad_loss() {
         let data = generate_data();
         let result = Model::params().loss(13).fit(&data);
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_fit_eval_bad_loss() {
+        let data = generate_data();
+        let result = Model::params().loss(13).fit_eval(&data, &data);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_cv_bad_loss() {
+        let data = generate_data();
+        // no way to detect error
+        Model::params().loss(13).cv(&data, 5);
     }
 }
