@@ -15,10 +15,9 @@ impl Model {
         let cpath = CString::new(path).expect("CString::new failed");
         let model =  unsafe { mf_load_model(cpath.as_ptr()) };
         if model.is_null() {
-            Err(Error("Cannot open model".to_string()))
-        } else {
-            Ok(Model { model })
+            return Err(Error("Cannot open model".to_string()));
         }
+        Ok(Model { model })
     }
 
     pub fn predict(&self, row_index: i32, column_index: i32) -> f32 {
@@ -29,10 +28,9 @@ impl Model {
         let cpath = CString::new(path).expect("CString::new failed");
         let status = unsafe { mf_save_model(self.model, cpath.as_ptr()) };
         if status != 0 {
-            Err(Error("Cannot save model".to_string()))
-        } else {
-            Ok(())
+            return Err(Error("Cannot save model".to_string()));
         }
+        Ok(())
     }
 
     pub fn rows(&self) -> i32 {
