@@ -1,5 +1,9 @@
 ## 0.2.0 (unreleased)
 
+- Added support for Windows
+
+Breaking changes
+
 - Changed pattern for fitting models - use `Model::params()` instead of `Model::new()`
 - Changed `fit`, `fit_eval`, `cv`, `save`, and `load` to return `Result`
 - Changed `cv` to return average error

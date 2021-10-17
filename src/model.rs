@@ -104,6 +104,7 @@ impl Drop for Model {
 #[cfg(test)]
 mod tests {
     use crate::{Error, Loss, Matrix, Model};
+    use std::env;
 
     fn generate_data() -> Matrix {
         let mut data = Matrix::new();
@@ -156,8 +157,12 @@ mod tests {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        model.save("/tmp/model.txt").unwrap();
-        let model = Model::load("/tmp/model.txt").unwrap();
+        let mut path = env::temp_dir();
+        path.push("model.txt");
+        let path = path.to_str().unwrap();
+
+        model.save(path).unwrap();
+        let model = Model::load(path).unwrap();
 
         model.p_factors();
         model.q_factors();
@@ -168,13 +173,13 @@ mod tests {
     fn test_save_missing() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
-        let result = model.save("/tmp/missing/model.txt");
+        let result = model.save("missing/model.txt");
         assert_eq!(result.unwrap_err(), Error::Io);
     }
 
     #[test]
     fn test_load_missing() {
-        let result = Model::load("/tmp/missing.txt");
+        let result = Model::load("missing.txt");
         assert_eq!(result.unwrap_err(), Error::Io);
     }
 
