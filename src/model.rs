@@ -2,6 +2,9 @@ use crate::bindings::*;
 use crate::{Matrix, Params};
 use std::ffi::CString;
 
+#[derive(Debug)]
+pub struct Error(String);
+
 pub struct Model {
     pub(crate) model: *mut MfModel,
 }
@@ -11,10 +14,15 @@ impl Model {
         Params::new()
     }
 
-    pub fn load(path: &str) -> Self {
+    pub fn load(path: &str) -> Result<Self, Error> {
         let cpath = CString::new(path).expect("CString::new failed");
-        Model {
-            model: unsafe { mf_load_model(cpath.as_ptr()) },
+        let model =  unsafe { mf_load_model(cpath.as_ptr()) };
+        if model.is_null() {
+            Err(Error("Cannot open model".to_string()))
+        } else {
+            Ok(Model {
+                model: model
+            })
         }
     }
 
@@ -135,11 +143,17 @@ mod tests {
         let model = Model::params().quiet(true).fit(&data);
 
         model.save("/tmp/model.txt");
-        let model = Model::load("/tmp/model.txt");
+        let model = Model::load("/tmp/model.txt").unwrap();
 
         model.p_factors();
         model.q_factors();
         model.bias();
+    }
+
+    #[test]
+    fn test_load_missing() {
+        let result = Model::load("/tmp/missing.txt");
+        assert!(result.is_err());
     }
 
     #[test]

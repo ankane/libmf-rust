@@ -57,7 +57,7 @@ model.save("model.txt");
 Load the model from a file
 
 ```rust
-let model = libmf::Model::load("model.txt");
+let model = libmf::Model::load("model.txt").unwrap();
 ```
 
 Pass a validation set
