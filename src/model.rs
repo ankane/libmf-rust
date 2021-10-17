@@ -171,4 +171,13 @@ mod tests {
         assert!(model.q_factors().is_empty());
         assert!(model.bias().is_nan());
     }
+
+    #[test]
+    fn test_fit_eval_empty() {
+        let data = Matrix::new();
+        let model = Model::params().quiet(true).fit_eval(&data, &data);
+        assert!(model.p_factors().is_empty());
+        assert!(model.q_factors().is_empty());
+        assert!(model.bias().is_nan());
+    }
 }
