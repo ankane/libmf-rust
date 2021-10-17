@@ -2,7 +2,7 @@ use crate::bindings::*;
 use crate::{Matrix, Model};
 
 pub struct Params {
-    param: MfParameter,
+    param: MfParameter
 }
 
 impl Params {
@@ -10,7 +10,7 @@ impl Params {
         let mut param = unsafe { mf_get_default_param() };
         param.nr_bins = 25;
         Self {
-            param,
+            param
         }
     }
 
@@ -88,7 +88,7 @@ impl Params {
     pub fn fit(&mut self, data: &Matrix) -> Model {
         let prob = data.to_problem();
         Model {
-            model: unsafe { mf_train(&prob, self.param) },
+            model: unsafe { mf_train(&prob, self.param) }
         }
     }
 
@@ -96,7 +96,7 @@ impl Params {
         let tr = train_set.to_problem();
         let va = eval_set.to_problem();
         Model {
-            model: unsafe { mf_train_with_validation(&tr, &va, self.param) },
+            model: unsafe { mf_train_with_validation(&tr, &va, self.param) }
         }
     }
 

@@ -3,16 +3,14 @@ extern crate libc;
 use std::os::raw::{c_char, c_double, c_float, c_int, c_longlong};
 
 #[repr(C)]
-pub struct MfNode
-{
+pub struct MfNode {
     pub u: c_int,
     pub v: c_int,
     pub r: c_float
 }
 
 #[repr(C)]
-pub struct MfProblem
-{
+pub struct MfProblem {
     pub m: c_int,
     pub n: c_int,
     pub nnz: c_longlong,
@@ -40,8 +38,7 @@ pub struct MfParameter {
 }
 
 #[repr(C)]
-pub struct MfModel
-{
+pub struct MfModel {
     pub fun: c_int,
     pub m: c_int,
     pub n: c_int,
