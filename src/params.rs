@@ -89,7 +89,8 @@ impl Params {
         let prob = data.to_problem();
         let model = unsafe { mf_train(&prob, self.param) };
         if model.is_null() {
-            Err(Error("Bad parameters".to_string()))
+            // TODO check parameters in Rust for better error message
+            Err(Error("Failed likely due to bad parameters".to_string()))
         } else {
             Ok(Model { model })
         }
@@ -100,7 +101,8 @@ impl Params {
         let va = eval_set.to_problem();
         let model = unsafe { mf_train_with_validation(&tr, &va, self.param) };
         if model.is_null() {
-            Err(Error("Bad parameters".to_string()))
+            // TODO check parameters in Rust for better error message
+            Err(Error("Failed likely due to bad parameters".to_string()))
         } else {
             Ok(Model { model })
         }
@@ -109,9 +111,10 @@ impl Params {
     pub fn cv(&mut self, data: &Matrix, folds: i32) -> Result<f64, Error> {
         let prob = data.to_problem();
         let avg_error = unsafe { mf_cross_validation(&prob, folds, self.param) };
-        // no way to differentiate between bad parameters and zero error
+        // TODO update fork to differentiate between bad parameters and zero error
         if avg_error == 0.0 {
-            Err(Error("Bad parameters".to_string()))
+            // TODO check parameters in Rust for better error message
+            Err(Error("Failed likely due to bad parameters".to_string()))
         } else {
             Ok(avg_error)
         }
