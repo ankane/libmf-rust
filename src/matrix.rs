@@ -18,6 +18,8 @@ impl Matrix {
     }
 
     pub fn push(&mut self, row_index: i32, column_index: i32, value: f32) {
+        assert!(row_index >= 0);
+        assert!(column_index >= 0);
         self.data.push(MfNode { u: row_index, v: column_index, r: value });
     }
 
