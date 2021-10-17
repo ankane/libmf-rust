@@ -1,6 +1,6 @@
 use std::ffi::NulError;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Error {
     Io,
     Parameter(String),
