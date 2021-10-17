@@ -147,6 +147,12 @@ mod tests {
     }
 
     #[test]
+    fn test_loss_real_kl() {
+        let data = generate_data();
+        assert!(Model::params().loss(Loss::RealKL).nmf(true).quiet(true).fit(&data).is_ok());
+    }
+
+    #[test]
     fn test_save_load() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
