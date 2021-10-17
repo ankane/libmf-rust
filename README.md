@@ -26,7 +26,7 @@ data.push(1, 1, 4.0);
 Fit a model
 
 ```rust
-let model = libmf::Model::params().fit(&data);
+let model = libmf::Model::params().fit(&data).unwrap();
 ```
 
 Make predictions
@@ -63,7 +63,7 @@ let model = libmf::Model::load("model.txt").unwrap();
 Pass a validation set
 
 ```rust
-let model = libmf::Model::params().fit_eval(&train_set, &eval_set);
+let model = libmf::Model::params().fit_eval(&train_set, &eval_set).unwrap();
 ```
 
 ## Cross-Validation
@@ -179,7 +179,7 @@ let mut data = libmf::Matrix::with_capacity(3);
 Use
 
 ```rust
-let model = libmf::Model::params().factors(20).fit(&data);
+let model = libmf::Model::params().factors(20).fit(&data).unwrap();
 ```
 
 instead of

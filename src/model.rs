@@ -1,9 +1,6 @@
 use crate::bindings::*;
-use crate::{Matrix, Params};
+use crate::{Error, Matrix, Params};
 use std::ffi::CString;
-
-#[derive(Debug)]
-pub struct Error(String);
 
 pub struct Model {
     pub(crate) model: *mut MfModel,
@@ -20,9 +17,7 @@ impl Model {
         if model.is_null() {
             Err(Error("Cannot open model".to_string()))
         } else {
-            Ok(Model {
-                model: model
-            })
+            Ok(Model { model })
         }
     }
 
@@ -117,7 +112,7 @@ mod tests {
     #[test]
     fn test_fit() {
         let data = generate_data();
-        let model = Model::params().quiet(true).fit(&data);
+        let model = Model::params().quiet(true).fit(&data).unwrap();
         model.predict(0, 1);
 
         model.p_factors();
@@ -128,7 +123,7 @@ mod tests {
     #[test]
     fn test_fit_eval() {
         let data = generate_data();
-        Model::params().quiet(true).fit_eval(&data, &data);
+        Model::params().quiet(true).fit_eval(&data, &data).unwrap();
     }
 
     #[test]
@@ -140,7 +135,7 @@ mod tests {
     #[test]
     fn test_save_load() {
         let data = generate_data();
-        let model = Model::params().quiet(true).fit(&data);
+        let model = Model::params().quiet(true).fit(&data).unwrap();
 
         model.save("/tmp/model.txt");
         let model = Model::load("/tmp/model.txt").unwrap();
@@ -159,7 +154,7 @@ mod tests {
     #[test]
     fn test_metrics() {
         let data = generate_data();
-        let model = Model::params().quiet(true).fit(&data);
+        let model = Model::params().quiet(true).fit(&data).unwrap();
 
         assert!(model.rmse(&data) < 0.15);
         assert!(model.mae(&data) < 0.15);
@@ -173,14 +168,14 @@ mod tests {
     #[test]
     fn test_predict_out_of_range() {
         let data = generate_data();
-        let model = Model::params().quiet(true).fit(&data);
+        let model = Model::params().quiet(true).fit(&data).unwrap();
         assert_eq!(model.bias(), model.predict(1000, 1000));
     }
 
     #[test]
     fn test_fit_empty() {
         let data = Matrix::new();
-        let model = Model::params().quiet(true).fit(&data);
+        let model = Model::params().quiet(true).fit(&data).unwrap();
         assert!(model.p_factors().is_empty());
         assert!(model.q_factors().is_empty());
         assert!(model.bias().is_nan());
@@ -189,9 +184,16 @@ mod tests {
     #[test]
     fn test_fit_eval_empty() {
         let data = Matrix::new();
-        let model = Model::params().quiet(true).fit_eval(&data, &data);
+        let model = Model::params().quiet(true).fit_eval(&data, &data).unwrap();
         assert!(model.p_factors().is_empty());
         assert!(model.q_factors().is_empty());
         assert!(model.bias().is_nan());
+    }
+
+    #[test]
+    fn test_bad_loss() {
+        let data = generate_data();
+        let result = Model::params().loss(13).fit(&data);
+        assert!(result.is_err());
     }
 }

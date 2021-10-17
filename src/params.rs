@@ -1,5 +1,5 @@
 use crate::bindings::*;
-use crate::{Matrix, Model};
+use crate::{Error, Matrix, Model};
 
 pub struct Params {
     param: MfParameter
@@ -85,18 +85,24 @@ impl Params {
         self
     }
 
-    pub fn fit(&mut self, data: &Matrix) -> Model {
+    pub fn fit(&mut self, data: &Matrix) -> Result<Model, Error> {
         let prob = data.to_problem();
-        Model {
-            model: unsafe { mf_train(&prob, self.param) }
+        let model = unsafe { mf_train(&prob, self.param) };
+        if model.is_null() {
+            Err(Error("Bad parameters".to_string()))
+        } else {
+            Ok(Model { model })
         }
     }
 
-    pub fn fit_eval(&mut self, train_set: &Matrix, eval_set: &Matrix) -> Model {
+    pub fn fit_eval(&mut self, train_set: &Matrix, eval_set: &Matrix) -> Result<Model, Error> {
         let tr = train_set.to_problem();
         let va = eval_set.to_problem();
-        Model {
-            model: unsafe { mf_train_with_validation(&tr, &va, self.param) }
+        let model = unsafe { mf_train_with_validation(&tr, &va, self.param) };
+        if model.is_null() {
+            Err(Error("Bad parameters".to_string()))
+        } else {
+            Ok(Model { model })
         }
     }
 
