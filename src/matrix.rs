@@ -23,10 +23,6 @@ impl Matrix {
         self.data.push(MfNode { u: row_index, v: column_index, r: value });
     }
 
-    pub fn len(&self) -> usize {
-        self.data.len()
-    }
-
     pub(crate) fn to_problem(&self) -> MfProblem {
         let data = &self.data;
         let m = data.iter().map(|x| x.u).max().unwrap_or(-1) + 1;
@@ -55,13 +51,5 @@ mod tests {
     fn test_with_capacity() {
         let mut data = Matrix::with_capacity(1);
         data.push(0, 0, 1.0);
-    }
-
-    #[test]
-    fn test_len() {
-        let mut data = Matrix::new();
-        assert_eq!(data.len(), 0);
-        data.push(0, 0, 1.0);
-        assert_eq!(data.len(), 1);
     }
 }
