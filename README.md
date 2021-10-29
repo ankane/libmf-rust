@@ -197,7 +197,7 @@ fn main() {
         .from_reader(file);
     for (i, record) in rdr.records().enumerate() {
         let row: Row = record.unwrap().deserialize(None).unwrap();
-        let matrix = if i >= 80000 { &mut valid_set } else { &mut train_set };
+        let matrix = if i < 80000 { &mut train_set } else { &mut valid_set };
         matrix.push(row.user_id, row.item_id, row.rating);
     }
 
