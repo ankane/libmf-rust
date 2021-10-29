@@ -160,6 +160,50 @@ Calculate AUC (for one-class MF)
 model.auc(&data, transpose);
 ```
 
+## Example
+
+Download the [MovieLens 100k dataset](https://grouplens.org/datasets/movielens/100k/) and add these lines to your application’s `Cargo.toml` under `[dependencies]`:
+
+```toml
+csv = "1"
+serde = { version = "1", features = ["derive"] }
+```
+
+Then, use:
+
+```rust
+use csv::ReaderBuilder;
+use serde::Deserialize;
+use std::fs::File;
+
+#[derive(Debug, Deserialize)]
+struct Row {
+    user_id: i32,
+    item_id: i32,
+    rating: f32,
+    time: i32,
+}
+
+fn main() {
+    let mut train_set = libmf::Matrix::new();
+    let mut valid_set = libmf::Matrix::new();
+
+    let file = File::open("u.data").unwrap();
+    let mut rdr = ReaderBuilder::new()
+        .has_headers(false)
+        .delimiter(b'\t')
+        .from_reader(file);
+    for (i, record) in rdr.records().enumerate() {
+        let row: Row = record.unwrap().deserialize(None).unwrap();
+        let matrix = if i >= 80000 { &mut valid_set } else { &mut train_set };
+        matrix.push(row.user_id, row.item_id, row.rating);
+    }
+
+    let model = libmf::Model::params().fit_eval(&train_set, &valid_set).unwrap();
+    println!("RMSE: {:?}", model.rmse(&valid_set));
+}
+```
+
 ## Reference
 
 Specify the initial capacity for a matrix
