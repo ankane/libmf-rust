@@ -162,14 +162,16 @@ model.auc(&data, transpose);
 
 ## Example
 
-Download the [MovieLens 100k dataset](https://grouplens.org/datasets/movielens/100k/) and add these lines to your application’s `Cargo.toml` under `[dependencies]`:
+Download the [MovieLens 100K dataset](https://grouplens.org/datasets/movielens/100k/).
+
+Add these lines to your application’s `Cargo.toml` under `[dependencies]`:
 
 ```toml
 csv = "1"
 serde = { version = "1", features = ["derive"] }
 ```
 
-Then, use:
+And use:
 
 ```rust
 use csv::ReaderBuilder;
