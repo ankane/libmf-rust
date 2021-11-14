@@ -1,3 +1,4 @@
+use std::error;
 use std::ffi::NulError;
 use std::fmt;
 
@@ -7,6 +8,8 @@ pub enum Error {
     Parameter(String),
     Unknown
 }
+
+impl error::Error for Error {}
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

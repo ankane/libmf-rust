@@ -1,3 +1,7 @@
+## 0.2.1 (unreleased)
+
+- Added `Error` trait to errors
+
 ## 0.2.0 (2021-10-17)
 
 - Added support for Windows
