@@ -1,6 +1,7 @@
 use crate::bindings::*;
 use crate::{Error, Matrix, Params};
 use std::ffi::CString;
+use std::path::Path;
 
 #[derive(Debug)]
 pub struct Model {
@@ -12,8 +13,9 @@ impl Model {
         Params::new()
     }
 
-    pub fn load(path: &str) -> Result<Self, Error> {
-        let cpath = CString::new(path)?;
+    pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
+        // TODO better conversion
+        let cpath = CString::new(path.as_ref().to_str().unwrap())?;
         let model =  unsafe { mf_load_model(cpath.as_ptr()) };
         if model.is_null() {
             return Err(Error::Io);
@@ -25,8 +27,9 @@ impl Model {
         unsafe { mf_predict(self.model, row_index, column_index) }
     }
 
-    pub fn save(&self, path: &str) -> Result<(), Error> {
-        let cpath = CString::new(path)?;
+    pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
+        // TODO better conversion
+        let cpath = CString::new(path.as_ref().to_str().unwrap())?;
         let status = unsafe { mf_save_model(self.model, cpath.as_ptr()) };
         if status != 0 {
             return Err(Error::Io);

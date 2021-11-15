@@ -1,6 +1,7 @@
 ## 0.2.1 (unreleased)
 
 - Added `Error` trait to errors
+- Added support for paths to `save` and `load`
 
 ## 0.2.0 (2021-10-17)
 
