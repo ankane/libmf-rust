@@ -1,4 +1,4 @@
-## 0.2.1 (unreleased)
+## 0.2.1 (2021-11-15)
 
 - Added `Error` trait to errors
 - Added support for paths to `save` and `load`
