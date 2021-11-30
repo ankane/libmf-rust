@@ -29,8 +29,8 @@ impl Matrix {
         let n = data.iter().map(|x| x.v).max().unwrap_or(-1) + 1;
 
         MfProblem {
-            m: m,
-            n: n,
+            m,
+            n,
             nnz: data.len() as i64,
             r: data.as_ptr()
         }
