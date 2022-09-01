@@ -61,6 +61,22 @@ impl Model {
         unsafe { std::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize) }
     }
 
+    pub fn items_p_factors(&self) -> Vec<&[f32]> {
+        let mut p_factors_vec = Vec::new();
+        for x in self.p_factors().chunks( self.factors() as usize) {
+            p_factors_vec.push(x);
+        }
+        return p_factors_vec;
+    }
+
+    pub fn items_q_factors(&self) -> Vec<&[f32]> {
+        let mut q_factors_vec = Vec::new();
+        for x in self.q_factors().chunks( self.factors() as usize) {
+            q_factors_vec.push(x);
+        }
+        return q_factors_vec;
+    }
+
     pub fn rmse(&self, data: &Matrix) -> f64 {
         let prob = data.to_problem();
         unsafe { calc_rmse(&prob, self.model) }
