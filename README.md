@@ -42,6 +42,16 @@ model.p_factors();
 model.q_factors();
 ```
 
+Get a list of latent factors where each row_index's latent factors are at the vector's index
+```rust
+model.items_p_factors();
+```
+
+Get a list of latent factors where each column_index's latent factors are at the vector's index
+```rust
+model.items_q_factors();
+```
+
 Get the bias (average of all elements in the training matrix)
 
 ```rust
