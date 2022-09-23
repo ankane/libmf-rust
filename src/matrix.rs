@@ -37,6 +37,12 @@ impl Matrix {
     }
 }
 
+impl Default for Matrix {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::Matrix;

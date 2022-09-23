@@ -2,7 +2,7 @@ use std::error;
 use std::ffi::NulError;
 use std::fmt;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Error {
     Io,
     Parameter(String),
