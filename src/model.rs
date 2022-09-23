@@ -70,6 +70,26 @@ impl Model {
         unsafe { std::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize) }
     }
 
+    pub fn p_row(&self, row_index: i32) -> Option<&[f32]>{
+        if row_index >= 0 && row_index < self.rows() {
+            let factors = self.factors();
+            let start_index = factors as usize * row_index as usize;
+            let end_index = factors as usize * (row_index as usize + 1);
+            return Some(&self.p_factors()[start_index..end_index]); 
+        }
+        return None;
+    }
+    
+    pub fn q_col(&self, column_index: i32) -> Option<&[f32]>{
+        if column_index >= 0 && column_index < self.columns() {
+            let factors = self.factors();
+            let start_index = factors as usize * column_index as usize;
+            let end_index = factors as usize * (column_index as usize + 1);
+            return Some(&self.q_factors()[start_index..end_index]); 
+        }
+        return None;
+    }
+
     pub fn rmse(&self, data: &Matrix) -> f64 {
         let prob = data.to_problem();
         unsafe { calc_rmse(&prob, self.model) }
