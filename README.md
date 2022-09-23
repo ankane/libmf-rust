@@ -44,7 +44,7 @@ model.p_factors();
 model.q_factors();
 ```
 
-Get the latent factors of a specific row or column
+Get the latent factors of a specific row or column [unreleased]
 
 ```rust
 model.p_row(row_index);

@@ -75,17 +75,17 @@ impl Model {
             let factors = self.factors();
             let start_index = factors as usize * row_index as usize;
             let end_index = factors as usize * (row_index as usize + 1);
-            return Some(&self.p_factors()[start_index..end_index]); 
+            return Some(&self.p_factors()[start_index..end_index]);
         }
         return None;
     }
-    
+
     pub fn q_col(&self, column_index: i32) -> Option<&[f32]>{
         if column_index >= 0 && column_index < self.columns() {
             let factors = self.factors();
             let start_index = factors as usize * column_index as usize;
             let end_index = factors as usize * (column_index as usize + 1);
-            return Some(&self.q_factors()[start_index..end_index]); 
+            return Some(&self.q_factors()[start_index..end_index]);
         }
         return None;
     }
@@ -177,6 +177,14 @@ mod tests {
         for (i, factors) in model.q_iter().enumerate() {
             assert_eq!(factors, q_vec[i]);
         }
+
+        assert_eq!(model.p_row(0), Some(p_vec[0]));
+        assert_eq!(model.p_row(1), Some(p_vec[1]));
+        assert_eq!(model.p_row(2), None);
+
+        assert_eq!(model.q_col(0), Some(q_vec[0]));
+        assert_eq!(model.q_col(1), Some(q_vec[1]));
+        assert_eq!(model.q_col(2), None);
     }
 
     #[test]
