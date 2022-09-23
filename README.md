@@ -40,8 +40,8 @@ model.predict(row_index, column_index);
 Get the latent factors (these approximate the training matrix)
 
 ```rust
-model.p_factors();
-model.q_factors();
+model.p_iter().collect::<Vec<&[f32]>>();
+model.q_iter().collect::<Vec<&[f32]>>();
 ```
 
 Get the bias (average of all elements in the training matrix)

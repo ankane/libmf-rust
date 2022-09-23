@@ -1,3 +1,7 @@
+## 0.2.2 (unreleased)
+
+- Added `p_iter` and `q_iter`
+
 ## 0.2.1 (2021-11-15)
 
 - Added `Error` trait to errors
