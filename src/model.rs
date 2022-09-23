@@ -54,14 +54,6 @@ impl Model {
         unsafe { (*self.model).b }
     }
 
-    pub fn p_iter(&self) -> Chunks<'_, f32> {
-        self.p_factors().chunks(self.factors() as usize)
-    }
-
-    pub fn q_iter(&self) -> Chunks<'_, f32> {
-        self.q_factors().chunks(self.factors() as usize)
-    }
-
     pub fn p_factors(&self) -> &[f32] {
         unsafe { std::slice::from_raw_parts((*self.model).p, (self.rows() * self.factors()) as usize) }
     }
@@ -88,6 +80,14 @@ impl Model {
             return Some(&self.q_factors()[start_index..end_index]);
         }
         None
+    }
+
+    pub fn p_iter(&self) -> Chunks<'_, f32> {
+        self.p_factors().chunks(self.factors() as usize)
+    }
+
+    pub fn q_iter(&self) -> Chunks<'_, f32> {
+        self.q_factors().chunks(self.factors() as usize)
     }
 
     pub fn rmse(&self, data: &Matrix) -> f64 {
