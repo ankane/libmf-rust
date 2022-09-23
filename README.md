@@ -47,8 +47,8 @@ model.q_factors();
 Get the latent factors of a specific row or column [unreleased]
 
 ```rust
-model.p_row(row_index);
-model.q_col(column_index);
+model.p(index);
+model.q(index);
 ```
 
 Get the bias (average of all elements in the training matrix)

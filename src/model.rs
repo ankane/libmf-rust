@@ -70,7 +70,7 @@ impl Model {
         unsafe { std::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize) }
     }
 
-    pub fn p_row(&self, row_index: i32) -> Option<&[f32]>{
+    pub fn p(&self, row_index: i32) -> Option<&[f32]>{
         if row_index >= 0 && row_index < self.rows() {
             let factors = self.factors();
             let start_index = factors as usize * row_index as usize;
@@ -80,7 +80,7 @@ impl Model {
         return None;
     }
 
-    pub fn q_col(&self, column_index: i32) -> Option<&[f32]>{
+    pub fn q(&self, column_index: i32) -> Option<&[f32]>{
         if column_index >= 0 && column_index < self.columns() {
             let factors = self.factors();
             let start_index = factors as usize * column_index as usize;
@@ -178,13 +178,13 @@ mod tests {
             assert_eq!(factors, q_vec[i]);
         }
 
-        assert_eq!(model.p_row(0), Some(p_vec[0]));
-        assert_eq!(model.p_row(1), Some(p_vec[1]));
-        assert_eq!(model.p_row(2), None);
+        assert_eq!(model.p(0), Some(p_vec[0]));
+        assert_eq!(model.p(1), Some(p_vec[1]));
+        assert_eq!(model.p(2), None);
 
-        assert_eq!(model.q_col(0), Some(q_vec[0]));
-        assert_eq!(model.q_col(1), Some(q_vec[1]));
-        assert_eq!(model.q_col(2), None);
+        assert_eq!(model.q(0), Some(q_vec[0]));
+        assert_eq!(model.q(1), Some(q_vec[1]));
+        assert_eq!(model.q(2), None);
     }
 
     #[test]
