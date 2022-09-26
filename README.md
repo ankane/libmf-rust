@@ -40,15 +40,11 @@ model.predict(row_index, column_index);
 Get the latent factors (these approximate the training matrix)
 
 ```rust
-model.p_factors();
-model.q_factors();
-```
-
-Get the latent factors of a specific row or column [unreleased]
-
-```rust
-model.p(index);
-model.q(index);
+model.p(row_index);
+model.q(column_index);
+// or
+model.p_iter();
+model.q_iter();
 ```
 
 Get the bias (average of all elements in the training matrix)

@@ -1,7 +1,7 @@
-## 0.2.2 (unreleased)
+## 0.2.2 (2022-09-23)
 
-- Added `p_iter` and `q_iter`
 - Added `p` and `q`
+- Added `p_iter` and `q_iter`
 
 ## 0.2.1 (2021-11-15)
 
