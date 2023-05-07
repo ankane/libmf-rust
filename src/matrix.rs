@@ -1,26 +1,28 @@
 use crate::bindings::{MfNode, MfProblem};
 
 pub struct Matrix {
-    data: Vec<MfNode>
+    data: Vec<MfNode>,
 }
 
 impl Matrix {
     pub fn new() -> Self {
-        Self {
-            data: Vec::new()
-        }
+        Self { data: Vec::new() }
     }
 
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
-            data: Vec::with_capacity(capacity)
+            data: Vec::with_capacity(capacity),
         }
     }
 
     pub fn push(&mut self, row_index: i32, column_index: i32, value: f32) {
         assert!(row_index >= 0);
         assert!(column_index >= 0);
-        self.data.push(MfNode { u: row_index, v: column_index, r: value });
+        self.data.push(MfNode {
+            u: row_index,
+            v: column_index,
+            r: value,
+        });
     }
 
     pub(crate) fn to_problem(&self) -> MfProblem {
@@ -32,7 +34,7 @@ impl Matrix {
             m,
             n,
             nnz: data.len() as i64,
-            r: data.as_ptr()
+            r: data.as_ptr(),
         }
     }
 }

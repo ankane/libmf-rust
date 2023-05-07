@@ -17,7 +17,7 @@ impl Model {
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
         // TODO better conversion
         let cpath = CString::new(path.as_ref().to_str().unwrap())?;
-        let model =  unsafe { mf_load_model(cpath.as_ptr()) };
+        let model = unsafe { mf_load_model(cpath.as_ptr()) };
         if model.is_null() {
             return Err(Error::Io);
         }

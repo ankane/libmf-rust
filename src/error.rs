@@ -6,7 +6,7 @@ use std::fmt;
 pub enum Error {
     Io,
     Parameter(String),
-    Unknown
+    Unknown,
 }
 
 impl error::Error for Error {}

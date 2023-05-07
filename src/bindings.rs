@@ -6,7 +6,7 @@ use std::os::raw::{c_char, c_double, c_float, c_int, c_longlong};
 pub struct MfNode {
     pub u: c_int,
     pub v: c_int,
-    pub r: c_float
+    pub r: c_float,
 }
 
 #[repr(C)]
@@ -14,7 +14,7 @@ pub struct MfProblem {
     pub m: c_int,
     pub n: c_int,
     pub nnz: c_longlong,
-    pub r: *const MfNode
+    pub r: *const MfNode,
 }
 
 #[repr(C)]
@@ -34,7 +34,7 @@ pub struct MfParameter {
     pub c: c_float,
     pub do_nmf: bool,
     pub quiet: bool,
-    pub copy_data: bool
+    pub copy_data: bool,
 }
 
 #[repr(C)]
@@ -45,7 +45,7 @@ pub struct MfModel {
     pub k: c_int,
     pub b: c_float,
     pub p: *const c_float,
-    pub q: *const c_float
+    pub q: *const c_float,
 }
 
 #[repr(C)]
@@ -59,7 +59,7 @@ pub enum Loss {
     BinaryL1 = 7,
     OneClassRow = 10,
     OneClassCol = 11,
-    OneClassL2 = 12
+    OneClassL2 = 12,
 }
 
 extern "C" {

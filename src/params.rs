@@ -2,16 +2,14 @@ use crate::bindings::*;
 use crate::{Error, Loss, Matrix, Model};
 
 pub struct Params {
-    param: MfParameter
+    param: MfParameter,
 }
 
 impl Params {
     pub(crate) fn new() -> Self {
         let mut param = unsafe { mf_get_default_param() };
         param.nr_bins = 25;
-        Self {
-            param
-        }
+        Self { param }
     }
 
     pub fn loss(&mut self, value: Loss) -> &mut Self {
