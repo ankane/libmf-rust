@@ -1,6 +1,4 @@
-extern crate libc;
-
-use std::os::raw::{c_char, c_double, c_float, c_int, c_longlong};
+use std::ffi::{c_char, c_double, c_float, c_int, c_longlong};
 
 #[repr(C)]
 pub struct MfNode {

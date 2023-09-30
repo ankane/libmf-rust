@@ -1,3 +1,7 @@
+## 0.2.3 (unreleased)
+
+- Removed dependency
+
 ## 0.2.2 (2022-09-23)
 
 - Added `p` and `q`
