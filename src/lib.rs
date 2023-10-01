@@ -1,6 +1,4 @@
-//! Large-scale sparse matrix factorization for Rust
-//!
-//! [View the docs](https://github.com/ankane/libmf-rust)
+#![doc = include_str!("../README.md")]
 
 mod bindings;
 mod error;
