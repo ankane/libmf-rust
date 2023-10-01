@@ -10,7 +10,8 @@ readme = "README.md"
 exclude = ["vendor/libmf/demo/*", "vendor/libmf/windows/*"]
 links = "mf"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+doctest = false
 
 [dependencies]
 
