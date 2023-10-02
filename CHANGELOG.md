@@ -1,6 +1,7 @@
-## 0.2.3 (unreleased)
+## 0.3.0 (unreleased)
 
 - Removed dependency
+- Updated Rust edition to 2021
 
 ## 0.2.2 (2022-09-23)
 
