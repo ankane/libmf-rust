@@ -4,7 +4,7 @@
 
 Check out [Disco](https://github.com/ankane/disco-rust) for higher-level collaborative filtering
 
-[![Build Status](https://github.com/ankane/libmf-rust/workflows/build/badge.svg?branch=master)](https://github.com/ankane/libmf-rust/actions)
+[![Build Status](https://github.com/ankane/libmf-rust/actions/workflows/build.yml/badge.svg)](https://github.com/ankane/libmf-rust/actions)
 
 ## Installation
 
