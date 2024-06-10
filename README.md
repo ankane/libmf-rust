@@ -223,24 +223,6 @@ let mut data = libmf::Matrix::with_capacity(3);
 
 - [LIBMF: A Library for Parallel Matrix Factorization in Shared-memory Systems](https://www.csie.ntu.edu.tw/~cjlin/papers/libmf/libmf_open_source.pdf)
 
-## Upgrading
-
-### 0.2.0
-
-Use
-
-```rust
-let model = libmf::Model::params().factors(20).fit(&data).unwrap();
-```
-
-instead of
-
-```rust
-let mut model = libmf::Model::new();
-model.factors = 20;
-model.fit(&data);
-```
-
 ## History
 
 View the [changelog](https://github.com/ankane/libmf-rust/blob/master/CHANGELOG.md)
