@@ -27,7 +27,7 @@ impl Model {
         Ok(Model { model })
     }
 
-    /// Returns the predicted value for a specific row and column.
+    /// Returns the predicted value for a row and column.
     pub fn predict(&self, row_index: i32, column_index: i32) -> f32 {
         unsafe { mf_predict(self.model, row_index, column_index) }
     }
@@ -73,7 +73,7 @@ impl Model {
         unsafe { std::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize) }
     }
 
-    /// Returns the latent factors for a specific row.
+    /// Returns the latent factors for a row.
     pub fn p(&self, row_index: i32) -> Option<&[f32]> {
         if row_index >= 0 && row_index < self.rows() {
             let factors = self.factors();
@@ -84,7 +84,7 @@ impl Model {
         None
     }
 
-    /// Returns the latent factors for a specific column.
+    /// Returns the latent factors for a column.
     pub fn q(&self, column_index: i32) -> Option<&[f32]> {
         if column_index >= 0 && column_index < self.columns() {
             let factors = self.factors();
