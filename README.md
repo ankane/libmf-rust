@@ -90,10 +90,10 @@ libmf::Model::params()
     .threads(12)                   // number of threads
     .bins(25)                      // number of bins
     .iterations(20)                // number of iterations
-    .lambda_p1(0.0)                // coefficient of L1-norm regularization on P
-    .lambda_p2(0.1)                // coefficient of L2-norm regularization on P
-    .lambda_q1(0.0)                // coefficient of L1-norm regularization on Q
-    .lambda_q2(0.1)                // coefficient of L2-norm regularization on Q
+    .lambda_p1(0.0)                // coefficient of L1-norm regularization for P
+    .lambda_p2(0.1)                // coefficient of L2-norm regularization for P
+    .lambda_q1(0.0)                // coefficient of L1-norm regularization for Q
+    .lambda_q2(0.1)                // coefficient of L2-norm regularization for Q
     .learning_rate(0.1)            // learning rate
     .alpha(1.0)                    // importance of negative entries
     .c(0.0001)                     // desired value of negative entries
