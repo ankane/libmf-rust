@@ -11,6 +11,7 @@ pub struct Model {
 }
 
 impl Model {
+    /// Returns a new set of parameters.
     pub fn params() -> Params {
         Params::new()
     }
