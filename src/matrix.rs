@@ -1,20 +1,24 @@
 use crate::bindings::{MfNode, MfProblem};
 
+/// A matrix.
 pub struct Matrix {
     data: Vec<MfNode>,
 }
 
 impl Matrix {
+    /// Creates a new matrix.
     pub fn new() -> Self {
         Self { data: Vec::new() }
     }
 
+    /// Creates a new matrix with a minimum capacity.
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
             data: Vec::with_capacity(capacity),
         }
     }
 
+    /// Adds a value to the matrix.
     pub fn push(&mut self, row_index: i32, column_index: i32, value: f32) {
         assert!(row_index >= 0);
         assert!(column_index >= 0);

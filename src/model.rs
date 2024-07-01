@@ -4,6 +4,7 @@ use std::ffi::CString;
 use std::path::Path;
 use std::slice::Chunks;
 
+/// A model.
 #[derive(Debug)]
 pub struct Model {
     pub(crate) model: *mut MfModel,

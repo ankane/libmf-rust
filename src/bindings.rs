@@ -46,6 +46,7 @@ pub struct MfModel {
     pub q: *const c_float,
 }
 
+/// Loss functions.
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub enum Loss {

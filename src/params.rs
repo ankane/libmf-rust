@@ -1,6 +1,7 @@
 use crate::bindings::*;
 use crate::{Error, Loss, Matrix, Model};
 
+/// A set of parameters.
 pub struct Params {
     param: MfParameter,
 }
