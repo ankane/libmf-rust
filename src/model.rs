@@ -62,14 +62,17 @@ impl Model {
         unsafe { (*self.model).b }
     }
 
+    /// Returns the latent factors for rows.
     pub fn p_factors(&self) -> &[f32] {
         unsafe { std::slice::from_raw_parts((*self.model).p, (self.rows() * self.factors()) as usize) }
     }
 
+    /// Returns the latent factors for columns.
     pub fn q_factors(&self) -> &[f32] {
         unsafe { std::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize) }
     }
 
+    /// Returns the latent factors for a specific row.
     pub fn p(&self, row_index: i32) -> Option<&[f32]> {
         if row_index >= 0 && row_index < self.rows() {
             let factors = self.factors();
@@ -80,6 +83,7 @@ impl Model {
         None
     }
 
+    /// Returns the latent factors for a specific column.
     pub fn q(&self, column_index: i32) -> Option<&[f32]> {
         if column_index >= 0 && column_index < self.columns() {
             let factors = self.factors();
@@ -90,10 +94,12 @@ impl Model {
         None
     }
 
+    /// Returns an iterator over the latent factors for rows.
     pub fn p_iter(&self) -> Chunks<'_, f32> {
         self.p_factors().chunks(self.factors() as usize)
     }
 
+    /// Returns an iterator over the latent factors for columns.
     pub fn q_iter(&self) -> Chunks<'_, f32> {
         self.q_factors().chunks(self.factors() as usize)
     }
