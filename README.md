@@ -59,7 +59,7 @@ Save the model to a file
 model.save("model.txt").unwrap();
 ```
 
-Load the model from a file
+Load a model from a file
 
 ```rust
 let model = libmf::Model::load("model.txt").unwrap();
@@ -87,7 +87,7 @@ Set parameters - default values below
 libmf::Model::params()
     .loss(libmf::Loss::RealL2)     // loss function
     .factors(8)                    // number of latent factors
-    .threads(12)                   // number of threads used
+    .threads(12)                   // number of threads
     .bins(25)                      // number of bins
     .iterations(20)                // number of iterations
     .lambda_p1(0.0)                // coefficient of L1-norm regularization on P

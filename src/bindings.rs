@@ -50,14 +50,23 @@ pub struct MfModel {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub enum Loss {
+    /// Squared error (L2-norm).
     RealL2 = 0,
+    /// Absolute error (L1-norm).
     RealL1 = 1,
+    /// Generalized KL-divergence.
     RealKL = 2,
+    /// Logarithmic error.
     BinaryLog = 5,
+    /// Squared hinge loss.
     BinaryL2 = 6,
+    /// Hinge loss.
     BinaryL1 = 7,
+    /// Row-oriented pair-wise logarithmic loss.
     OneClassRow = 10,
+    /// Column-oriented pair-wise logarithmic loss.
     OneClassCol = 11,
+    /// Squared error (L2-norm).
     OneClassL2 = 12,
 }
 
