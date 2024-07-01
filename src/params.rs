@@ -43,25 +43,25 @@ impl Params {
         self
     }
 
-    /// Sets the coefficient of L1-norm regularization for P.
+    /// Sets the L1-regularization parameter for P.
     pub fn lambda_p1(&mut self, value: f32) -> &mut Self {
         self.param.lambda_p1 = value;
         self
     }
 
-    /// Sets the coefficient of L2-norm regularization for P.
+    /// Sets the L2-regularization parameter for P.
     pub fn lambda_p2(&mut self, value: f32) -> &mut Self {
         self.param.lambda_p2 = value;
         self
     }
 
-    /// Sets the coefficient of L1-norm regularization for Q.
+    /// Sets the L1-regularization parameter for Q.
     pub fn lambda_q1(&mut self, value: f32) -> &mut Self {
         self.param.lambda_q1 = value;
         self
     }
 
-    /// Sets the coefficient of L2-norm regularization for Q.
+    /// Sets the L2-regularization parameter for Q.
     pub fn lambda_q2(&mut self, value: f32) -> &mut Self {
         self.param.lambda_q2 = value;
         self
