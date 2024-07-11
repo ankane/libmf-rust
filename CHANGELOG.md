@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0 (2024-07-10)
 
 - Removed dependency
 - Updated Rust edition to 2021

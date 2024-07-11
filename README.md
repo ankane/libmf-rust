@@ -11,7 +11,7 @@ Check out [Disco](https://github.com/ankane/disco-rust) for higher-level collabo
 Add this line to your application’s `Cargo.toml` under `[dependencies]`:
 
 ```toml
-libmf = "0.2"
+libmf = "0.3"
 ```
 
 ## Getting Started
