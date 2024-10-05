@@ -76,8 +76,16 @@ extern "C" {
     pub fn mf_load_model(path: *const c_char) -> *mut MfModel;
     pub fn mf_destroy_model(model: *mut *mut MfModel);
     pub fn mf_train(prob: *const MfProblem, param: MfParameter) -> *mut MfModel;
-    pub fn mf_train_with_validation(tr: *const MfProblem, va: *const MfProblem, param: MfParameter) -> *mut MfModel;
-    pub fn mf_cross_validation(prob: *const MfProblem, nr_folds: c_int, param: MfParameter) -> c_double;
+    pub fn mf_train_with_validation(
+        tr: *const MfProblem,
+        va: *const MfProblem,
+        param: MfParameter,
+    ) -> *mut MfModel;
+    pub fn mf_cross_validation(
+        prob: *const MfProblem,
+        nr_folds: c_int,
+        param: MfParameter,
+    ) -> c_double;
     pub fn mf_predict(model: *const MfModel, u: c_int, v: c_int) -> c_float;
     pub fn calc_rmse(prob: *const MfProblem, model: *const MfModel) -> c_double;
     pub fn calc_mae(prob: *const MfProblem, model: *const MfModel) -> c_double;

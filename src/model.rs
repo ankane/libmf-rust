@@ -65,12 +65,16 @@ impl Model {
 
     /// Returns the latent factors for rows.
     pub fn p_factors(&self) -> &[f32] {
-        unsafe { std::slice::from_raw_parts((*self.model).p, (self.rows() * self.factors()) as usize) }
+        unsafe {
+            std::slice::from_raw_parts((*self.model).p, (self.rows() * self.factors()) as usize)
+        }
     }
 
     /// Returns the latent factors for columns.
     pub fn q_factors(&self) -> &[f32] {
-        unsafe { std::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize) }
+        unsafe {
+            std::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize)
+        }
     }
 
     /// Returns the latent factors for a row.
@@ -226,14 +230,23 @@ mod tests {
     #[test]
     fn test_loss() {
         let data = generate_data();
-        let model = Model::params().loss(Loss::OneClassL2).quiet(true).fit(&data).unwrap();
+        let model = Model::params()
+            .loss(Loss::OneClassL2)
+            .quiet(true)
+            .fit(&data)
+            .unwrap();
         assert_eq!(model.bias(), 0.0);
     }
 
     #[test]
     fn test_loss_real_kl() {
         let data = generate_data();
-        assert!(Model::params().loss(Loss::RealKL).nmf(true).quiet(true).fit(&data).is_ok());
+        assert!(Model::params()
+            .loss(Loss::RealKL)
+            .nmf(true)
+            .quiet(true)
+            .fit(&data)
+            .is_ok());
     }
 
     #[test]
