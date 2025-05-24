@@ -181,17 +181,20 @@ fn main() {
     let rdr = BufReader::new(file);
     for (i, line) in rdr.lines().enumerate() {
         let line = line.unwrap();
-        let row: Vec<_> = line.split('\t').collect();
+        let mut row = line.split('\t');
 
-        let user_id: i32 = row[0].parse().unwrap();
-        let item_id: i32 = row[1].parse().unwrap();
-        let rating: f32 = row[2].parse().unwrap();
+        let user_id = row.next().unwrap().parse().unwrap();
+        let item_id = row.next().unwrap().parse().unwrap();
+        let rating = row.next().unwrap().parse().unwrap();
 
         let matrix = if i < 80000 { &mut train_set } else { &mut valid_set };
         matrix.push(user_id, item_id, rating);
     }
 
-    let model = libmf::Model::params().fit_eval(&train_set, &valid_set).unwrap();
+    let model = libmf::Model::params()
+        .factors(20)
+        .fit_eval(&train_set, &valid_set)
+        .unwrap();
     println!("RMSE: {:?}", model.rmse(&valid_set));
 }
 ```
