@@ -174,8 +174,8 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
-    let mut train_set = libmf::Matrix::new();
-    let mut valid_set = libmf::Matrix::new();
+    let mut train_set = libmf::Matrix::with_capacity(80000);
+    let mut valid_set = libmf::Matrix::with_capacity(20000);
 
     let file = File::open("path/to/ml-100k/u.data").unwrap();
     let rdr = BufReader::new(file);
