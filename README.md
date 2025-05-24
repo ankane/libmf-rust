@@ -167,43 +167,28 @@ model.auc(&data, transpose);
 
 ## Example
 
-Download the [MovieLens 100K dataset](https://grouplens.org/datasets/movielens/100k/).
-
-Add these lines to your application’s `Cargo.toml` under `[dependencies]`:
-
-```toml
-csv = "1"
-serde = { version = "1", features = ["derive"] }
-```
-
-And use:
+Download the [MovieLens 100K dataset](https://grouplens.org/datasets/movielens/100k/) and use:
 
 ```rust
-use csv::ReaderBuilder;
-use serde::Deserialize;
 use std::fs::File;
-
-#[derive(Debug, Deserialize)]
-struct Row {
-    user_id: i32,
-    item_id: i32,
-    rating: f32,
-    time: i32,
-}
+use std::io::{BufRead, BufReader};
 
 fn main() {
     let mut train_set = libmf::Matrix::new();
     let mut valid_set = libmf::Matrix::new();
 
-    let file = File::open("u.data").unwrap();
-    let mut rdr = ReaderBuilder::new()
-        .has_headers(false)
-        .delimiter(b'\t')
-        .from_reader(file);
-    for (i, record) in rdr.records().enumerate() {
-        let row: Row = record.unwrap().deserialize(None).unwrap();
+    let file = File::open("path/to/ml-100k/u.data").unwrap();
+    let rdr = BufReader::new(file);
+    for (i, line) in rdr.lines().enumerate() {
+        let line = line.unwrap();
+        let row: Vec<_> = line.split('\t').collect();
+
+        let user_id: i32 = row[0].parse().unwrap();
+        let item_id: i32 = row[1].parse().unwrap();
+        let rating: f32 = row[2].parse().unwrap();
+
         let matrix = if i < 80000 { &mut train_set } else { &mut valid_set };
-        matrix.push(row.user_id, row.item_id, row.rating);
+        matrix.push(user_id, item_id, rating);
     }
 
     let model = libmf::Model::params().fit_eval(&train_set, &valid_set).unwrap();
