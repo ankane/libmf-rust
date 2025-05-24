@@ -170,23 +170,22 @@ model.auc(&data, transpose);
 Download the [MovieLens 100K dataset](https://grouplens.org/datasets/movielens/100k/) and use:
 
 ```rust
-use std::error::Error;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() {
     let mut train_set = libmf::Matrix::with_capacity(80000);
     let mut valid_set = libmf::Matrix::with_capacity(20000);
 
-    let file = File::open("path/to/ml-100k/u.data")?;
+    let file = File::open("path/to/ml-100k/u.data").unwrap();
     let rdr = BufReader::new(file);
     for (i, line) in rdr.lines().enumerate() {
         let line = line.unwrap();
         let mut row = line.split('\t');
 
-        let user_id = row.next().unwrap().parse()?;
-        let item_id = row.next().unwrap().parse()?;
-        let rating = row.next().unwrap().parse()?;
+        let user_id = row.next().unwrap().parse().unwrap();
+        let item_id = row.next().unwrap().parse().unwrap();
+        let rating = row.next().unwrap().parse().unwrap();
 
         let matrix = if i < 80000 { &mut train_set } else { &mut valid_set };
         matrix.push(user_id, item_id, rating);
@@ -194,10 +193,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let model = libmf::Model::params()
         .factors(20)
-        .fit_eval(&train_set, &valid_set)?;
+        .fit_eval(&train_set, &valid_set)
+        .unwrap();
     println!("RMSE: {:?}", model.rmse(&valid_set));
-
-    Ok(())
 }
 ```
 
