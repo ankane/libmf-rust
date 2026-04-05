@@ -1,6 +1,7 @@
-use std::error;
-use std::ffi::NulError;
-use std::fmt;
+use alloc::ffi::NulError;
+use alloc::string::String;
+use core::error;
+use core::fmt;
 
 /// An error.
 #[derive(Debug, Eq, PartialEq)]

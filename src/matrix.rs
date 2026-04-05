@@ -1,4 +1,5 @@
 use crate::bindings::{MfNode, MfProblem};
+use alloc::vec::Vec;
 
 /// A matrix.
 pub struct Matrix {

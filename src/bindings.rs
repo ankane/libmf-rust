@@ -1,4 +1,4 @@
-use std::ffi::{c_char, c_double, c_float, c_int, c_longlong};
+use core::ffi::{c_char, c_double, c_float, c_int, c_longlong};
 
 #[repr(C)]
 pub struct MfNode {

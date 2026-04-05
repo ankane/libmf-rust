@@ -1,8 +1,10 @@
 use crate::bindings::*;
 use crate::{Error, Matrix, Params};
-use std::ffi::CString;
+use alloc::ffi::CString;
+use alloc::slice::Chunks;
+
+#[cfg(not(feature = "no_std"))]
 use std::path::Path;
-use std::slice::Chunks;
 
 /// A model.
 #[derive(Debug)]
@@ -17,14 +19,16 @@ impl Model {
     }
 
     /// Loads a model from a file.
+    #[cfg(feature = "no_std")]
+    pub fn load(path: &str) -> Result<Self, Error> {
+        Self::load_str(path)
+    }
+
+    /// Loads a model from a file.
+    #[cfg(not(feature = "no_std"))]
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
-        // TODO better conversion
-        let cpath = CString::new(path.as_ref().to_str().unwrap())?;
-        let model = unsafe { mf_load_model(cpath.as_ptr()) };
-        if model.is_null() {
-            return Err(Error::Io);
-        }
-        Ok(Model { model })
+        // TODO remove unwrap
+        Self::load_str(path.as_ref().to_str().unwrap())
     }
 
     /// Returns the predicted value for a row and column.
@@ -33,14 +37,16 @@ impl Model {
     }
 
     /// Saves the model to a file.
+    #[cfg(feature = "no_std")]
+    pub fn save(&self, path: &str) -> Result<(), Error> {
+        self.save_str(path)
+    }
+
+    /// Saves the model to a file.
+    #[cfg(not(feature = "no_std"))]
     pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
-        // TODO better conversion
-        let cpath = CString::new(path.as_ref().to_str().unwrap())?;
-        let status = unsafe { mf_save_model(self.model, cpath.as_ptr()) };
-        if status != 0 {
-            return Err(Error::Io);
-        }
-        Ok(())
+        // TODO remove unwrap
+        self.save_str(path.as_ref().to_str().unwrap())
     }
 
     /// Returns the number of rows.
@@ -66,14 +72,14 @@ impl Model {
     /// Returns the latent factors for rows.
     pub fn p_factors(&self) -> &[f32] {
         unsafe {
-            std::slice::from_raw_parts((*self.model).p, (self.rows() * self.factors()) as usize)
+            core::slice::from_raw_parts((*self.model).p, (self.rows() * self.factors()) as usize)
         }
     }
 
     /// Returns the latent factors for columns.
     pub fn q_factors(&self) -> &[f32] {
         unsafe {
-            std::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize)
+            core::slice::from_raw_parts((*self.model).q, (self.columns() * self.factors()) as usize)
         }
     }
 
@@ -150,6 +156,24 @@ impl Model {
         let prob = data.to_problem();
         unsafe { calc_auc(&prob, self.model, transpose) }
     }
+
+    fn load_str(path: &str) -> Result<Self, Error> {
+        let cpath = CString::new(path)?;
+        let model = unsafe { mf_load_model(cpath.as_ptr()) };
+        if model.is_null() {
+            return Err(Error::Io);
+        }
+        Ok(Model { model })
+    }
+
+    fn save_str(&self, path: &str) -> Result<(), Error> {
+        let cpath = CString::new(path)?;
+        let status = unsafe { mf_save_model(self.model, cpath.as_ptr()) };
+        if status != 0 {
+            return Err(Error::Io);
+        }
+        Ok(())
+    }
 }
 
 impl Drop for Model {
@@ -162,7 +186,8 @@ impl Drop for Model {
 #[cfg(test)]
 mod tests {
     use crate::{Error, Loss, Matrix, Model};
-    use std::env;
+    use crate::alloc::string::ToString;
+    use alloc::vec::Vec;
 
     fn generate_data() -> Matrix {
         let mut data = Matrix::new();
@@ -250,11 +275,12 @@ mod tests {
     }
 
     #[test]
+    #[cfg(not(feature = "no_std"))]
     fn test_save_load() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        let mut path = env::temp_dir();
+        let mut path = std::env::temp_dir();
         path.push("model.txt");
         let path = path.to_str().unwrap();
 

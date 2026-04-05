@@ -1,3 +1,7 @@
+## 0.3.1 (unreleased)
+
+- Added experimental support for `no_std`
+
 ## 0.3.0 (2024-07-10)
 
 - Removed dependency

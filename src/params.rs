@@ -1,5 +1,6 @@
 use crate::bindings::*;
 use crate::{Error, Loss, Matrix, Model};
+use alloc::string::ToString;
 
 /// A set of parameters.
 pub struct Params {

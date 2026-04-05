@@ -8,7 +8,10 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
       - run: cargo test
+      # build for no_std to catch errors
+      - run: cargo build --features no_std
+      - run: cargo test --features no_std
