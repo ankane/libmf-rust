@@ -13,5 +13,5 @@ jobs:
           submodules: true
       - run: cargo test
       # build for no_std to catch errors
-      - run: cargo build --features no_std
-      - run: cargo test --features no_std
+      - run: cargo build --no-default-features
+      - run: cargo test --no-default-features

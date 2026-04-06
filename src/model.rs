@@ -3,7 +3,7 @@ use crate::{Error, Matrix, Params};
 use alloc::ffi::CString;
 use alloc::slice::Chunks;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::path::Path;
 
 /// A model.
@@ -19,16 +19,16 @@ impl Model {
     }
 
     /// Loads a model from a file.
-    #[cfg(feature = "no_std")]
-    pub fn load(path: &str) -> Result<Self, Error> {
-        Self::load_str(path)
-    }
-
-    /// Loads a model from a file.
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
         // TODO remove unwrap
         Self::load_str(path.as_ref().to_str().unwrap())
+    }
+
+    /// Loads a model from a file.
+    #[cfg(not(feature = "std"))]
+    pub fn load(path: &str) -> Result<Self, Error> {
+        Self::load_str(path)
     }
 
     /// Returns the predicted value for a row and column.
@@ -37,16 +37,16 @@ impl Model {
     }
 
     /// Saves the model to a file.
-    #[cfg(feature = "no_std")]
-    pub fn save(&self, path: &str) -> Result<(), Error> {
-        self.save_str(path)
-    }
-
-    /// Saves the model to a file.
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
         // TODO remove unwrap
         self.save_str(path.as_ref().to_str().unwrap())
+    }
+
+    /// Saves the model to a file.
+    #[cfg(not(feature = "std"))]
+    pub fn save(&self, path: &str) -> Result<(), Error> {
+        self.save_str(path)
     }
 
     /// Returns the number of rows.
@@ -185,8 +185,8 @@ impl Drop for Model {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Error, Loss, Matrix, Model};
     use crate::alloc::string::ToString;
+    use crate::{Error, Loss, Matrix, Model};
     use alloc::vec::Vec;
 
     fn generate_data() -> Matrix {
@@ -275,7 +275,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     fn test_save_load() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
