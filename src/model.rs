@@ -21,8 +21,7 @@ impl Model {
     /// Loads a model from a file.
     #[cfg(feature = "std")]
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
-        // TODO remove unwrap
-        Self::load_str(path.as_ref().to_str().unwrap())
+        Self::load_str(path.as_ref().to_str().ok_or(Error::Io)?)
     }
 
     /// Loads a model from a file.
@@ -39,8 +38,7 @@ impl Model {
     /// Saves the model to a file.
     #[cfg(feature = "std")]
     pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
-        // TODO remove unwrap
-        self.save_str(path.as_ref().to_str().unwrap())
+        self.save_str(path.as_ref().to_str().ok_or(Error::Io)?)
     }
 
     /// Saves the model to a file.
