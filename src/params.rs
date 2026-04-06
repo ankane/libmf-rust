@@ -1,5 +1,5 @@
 use crate::bindings::*;
-use crate::{Error, Loss, Matrix, Model};
+use crate::{Error, Loss, Model, Node};
 
 /// A set of parameters.
 pub struct Params {
@@ -98,8 +98,8 @@ impl Params {
     }
 
     /// Fits a model.
-    pub fn fit(&mut self, data: &Matrix) -> Result<Model, Error> {
-        let prob = data.to_problem();
+    pub fn fit(&mut self, data: &[Node]) -> Result<Model, Error> {
+        let prob = MfProblem::from(data);
         let param = self.build_param()?;
         let model = unsafe { mf_train(&prob, param) };
         if model.is_null() {
@@ -109,9 +109,9 @@ impl Params {
     }
 
     /// Fits a model and performs cross-validation.
-    pub fn fit_eval(&mut self, train_set: &Matrix, eval_set: &Matrix) -> Result<Model, Error> {
-        let tr = train_set.to_problem();
-        let va = eval_set.to_problem();
+    pub fn fit_eval(&mut self, train_set: &[Node], eval_set: &[Node]) -> Result<Model, Error> {
+        let tr = MfProblem::from(train_set);
+        let va = MfProblem::from(eval_set);
         let param = self.build_param()?;
         let model = unsafe { mf_train_with_validation(&tr, &va, param) };
         if model.is_null() {
@@ -121,8 +121,8 @@ impl Params {
     }
 
     /// Performs cross-validation.
-    pub fn cv(&mut self, data: &Matrix, folds: i32) -> Result<f64, Error> {
-        let prob = data.to_problem();
+    pub fn cv(&mut self, data: &[Node], folds: i32) -> Result<f64, Error> {
+        let prob = MfProblem::from(data);
         let param = self.build_param()?;
         let avg_error = unsafe { mf_cross_validation(&prob, folds, param) };
         // TODO update fork to differentiate between bad parameters and zero error

@@ -1,5 +1,5 @@
 use crate::bindings::*;
-use crate::{Error, Matrix, Params};
+use crate::{Error, Node, Params};
 use alloc::ffi::CString;
 use core::slice::Chunks;
 
@@ -114,44 +114,44 @@ impl Model {
     }
 
     /// Calculates RMSE (for real-valued MF).
-    pub fn rmse(&self, data: &Matrix) -> f64 {
-        let prob = data.to_problem();
+    pub fn rmse(&self, data: &[Node]) -> f64 {
+        let prob = MfProblem::from(data);
         unsafe { calc_rmse(&prob, self.model) }
     }
 
     /// Calculates MAE (for real-valued MF).
-    pub fn mae(&self, data: &Matrix) -> f64 {
-        let prob = data.to_problem();
+    pub fn mae(&self, data: &[Node]) -> f64 {
+        let prob = MfProblem::from(data);
         unsafe { calc_mae(&prob, self.model) }
     }
 
     /// Calculates generalized KL-divergence (for non-negative real-valued MF).
-    pub fn gkl(&self, data: &Matrix) -> f64 {
-        let prob = data.to_problem();
+    pub fn gkl(&self, data: &[Node]) -> f64 {
+        let prob = MfProblem::from(data);
         unsafe { calc_gkl(&prob, self.model) }
     }
 
     /// Calculates logarithmic loss (for binary MF).
-    pub fn logloss(&self, data: &Matrix) -> f64 {
-        let prob = data.to_problem();
+    pub fn logloss(&self, data: &[Node]) -> f64 {
+        let prob = MfProblem::from(data);
         unsafe { calc_logloss(&prob, self.model) }
     }
 
     /// Calculates accuracy (for binary MF).
-    pub fn accuracy(&self, data: &Matrix) -> f64 {
-        let prob = data.to_problem();
+    pub fn accuracy(&self, data: &[Node]) -> f64 {
+        let prob = MfProblem::from(data);
         unsafe { calc_accuracy(&prob, self.model) }
     }
 
     /// Calculates MPR (for one-class MF).
-    pub fn mpr(&self, data: &Matrix, transpose: bool) -> f64 {
-        let prob = data.to_problem();
+    pub fn mpr(&self, data: &[Node], transpose: bool) -> f64 {
+        let prob = MfProblem::from(data);
         unsafe { calc_mpr(&prob, self.model, transpose) }
     }
 
     /// Calculates AUC (for one-class MF).
-    pub fn auc(&self, data: &Matrix, transpose: bool) -> f64 {
-        let prob = data.to_problem();
+    pub fn auc(&self, data: &[Node], transpose: bool) -> f64 {
+        let prob = MfProblem::from(data);
         unsafe { calc_auc(&prob, self.model, transpose) }
     }
 
@@ -183,14 +183,14 @@ impl Drop for Model {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Error, Loss, Matrix, Model};
+    use crate::{Error, Loss, Model, Node};
     use alloc::vec::Vec;
 
-    fn generate_data() -> Matrix {
-        let mut data = Matrix::new();
-        data.push(0, 0, 1.0);
-        data.push(1, 0, 2.0);
-        data.push(1, 1, 1.0);
+    fn generate_data() -> Vec<Node> {
+        let mut data = Vec::new();
+        data.push(Node(0, 0, 1.0));
+        data.push(Node(1, 0, 2.0));
+        data.push(Node(1, 1, 1.0));
         data
     }
 
@@ -326,7 +326,7 @@ mod tests {
 
     #[test]
     fn test_fit_empty() {
-        let data = Matrix::new();
+        let data = Vec::new();
         let model = Model::params().quiet(true).fit(&data).unwrap();
         assert!(model.p_factors().is_empty());
         assert!(model.q_factors().is_empty());
@@ -335,7 +335,7 @@ mod tests {
 
     #[test]
     fn test_fit_eval_empty() {
-        let data = Matrix::new();
+        let data = Vec::new();
         let model = Model::params().quiet(true).fit_eval(&data, &data).unwrap();
         assert!(model.p_factors().is_empty());
         assert!(model.q_factors().is_empty());

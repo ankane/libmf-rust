@@ -1,11 +1,7 @@
 use core::ffi::{c_char, c_double, c_float, c_int, c_longlong};
 
 #[repr(C)]
-pub struct MfNode {
-    pub u: c_int,
-    pub v: c_int,
-    pub r: c_float,
-}
+pub struct MfNode(pub c_int, pub c_int, pub c_float);
 
 #[repr(C)]
 pub struct MfProblem {
@@ -94,4 +90,18 @@ extern "C" {
     pub fn calc_accuracy(prob: *const MfProblem, model: *const MfModel) -> c_double;
     pub fn calc_mpr(prob: *const MfProblem, model: *const MfModel, transpose: bool) -> c_double;
     pub fn calc_auc(prob: *const MfProblem, model: *const MfModel, transpose: bool) -> c_double;
+}
+
+impl From<&[MfNode]> for MfProblem {
+    fn from(data: &[MfNode]) -> Self {
+        let m = data.iter().map(|x| x.0).max().unwrap_or(-1) + 1;
+        let n = data.iter().map(|x| x.1).max().unwrap_or(-1) + 1;
+
+        MfProblem {
+            m,
+            n,
+            nnz: data.len() as i64,
+            r: data.as_ptr(),
+        }
+    }
 }
