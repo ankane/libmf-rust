@@ -1,6 +1,6 @@
 use crate::bindings::*;
 use crate::{Error, Node, Params};
-use alloc::ffi::CString;
+use core::ffi::CStr;
 use core::slice::Chunks;
 
 #[cfg(feature = "std")]
@@ -21,13 +21,21 @@ impl Model {
     /// Loads a model from a file.
     #[cfg(feature = "std")]
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
-        Self::load_str(path.as_ref().to_str().ok_or(Error::Io)?)
+        Self::load_cstr(&alloc::ffi::CString::new(
+            path.as_ref().to_str().ok_or(Error::Io)?,
+        )?)
     }
 
     /// Loads a model from a file.
-    #[cfg(not(feature = "std"))]
+    #[cfg(all(feature = "alloc", not(feature = "std")))]
     pub fn load(path: &str) -> Result<Self, Error> {
-        Self::load_str(path)
+        Self::load_cstr(&alloc::ffi::CString::new(path)?)
+    }
+
+    /// Loads a model from a file.
+    #[cfg(not(feature = "alloc"))]
+    pub fn load(path: &CStr) -> Result<Self, Error> {
+        Self::load_cstr(path)
     }
 
     /// Returns the predicted value for a row and column.
@@ -38,13 +46,21 @@ impl Model {
     /// Saves the model to a file.
     #[cfg(feature = "std")]
     pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
-        self.save_str(path.as_ref().to_str().ok_or(Error::Io)?)
+        self.save_cstr(&alloc::ffi::CString::new(
+            path.as_ref().to_str().ok_or(Error::Io)?,
+        )?)
     }
 
     /// Saves the model to a file.
-    #[cfg(not(feature = "std"))]
+    #[cfg(all(feature = "alloc", not(feature = "std")))]
     pub fn save(&self, path: &str) -> Result<(), Error> {
-        self.save_str(path)
+        self.save_cstr(&alloc::ffi::CString::new(path)?)
+    }
+
+    /// Saves the model to a file.
+    #[cfg(not(feature = "alloc"))]
+    pub fn save(&self, path: &CStr) -> Result<(), Error> {
+        self.save_cstr(path)
     }
 
     /// Returns the number of rows.
@@ -155,18 +171,16 @@ impl Model {
         unsafe { calc_auc(&prob, self.model, transpose) }
     }
 
-    fn load_str(path: &str) -> Result<Self, Error> {
-        let cpath = CString::new(path)?;
-        let model = unsafe { mf_load_model(cpath.as_ptr()) };
+    fn load_cstr(path: &CStr) -> Result<Self, Error> {
+        let model = unsafe { mf_load_model(path.as_ptr()) };
         if model.is_null() {
             return Err(Error::Io);
         }
         Ok(Model { model })
     }
 
-    fn save_str(&self, path: &str) -> Result<(), Error> {
-        let cpath = CString::new(path)?;
-        let status = unsafe { mf_save_model(self.model, cpath.as_ptr()) };
+    fn save_cstr(&self, path: &CStr) -> Result<(), Error> {
+        let status = unsafe { mf_save_model(self.model, path.as_ptr()) };
         if status != 0 {
             return Err(Error::Io);
         }
@@ -184,18 +198,16 @@ impl Drop for Model {
 #[cfg(test)]
 mod tests {
     use crate::{Error, Loss, Model, Node};
-    use alloc::vec::Vec;
 
-    fn generate_data() -> Vec<Node> {
-        let mut data = Vec::new();
-        data.push(Node(0, 0, 1.0));
-        data.push(Node(1, 0, 2.0));
-        data.push(Node(1, 1, 1.0));
-        data
+    fn generate_data() -> [Node; 3] {
+        [Node(0, 0, 1.0), Node(1, 0, 2.0), Node(1, 1, 1.0)]
     }
 
     #[test]
+    #[cfg(feature = "alloc")]
     fn test_fit() {
+        use alloc::vec::Vec;
+
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
         model.predict(0, 1);
@@ -290,6 +302,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "alloc")]
     fn test_save_missing() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
@@ -298,6 +311,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "alloc")]
     fn test_load_missing() {
         let result = Model::load("missing.txt");
         assert_eq!(result.unwrap_err(), Error::Io);
@@ -326,8 +340,7 @@ mod tests {
 
     #[test]
     fn test_fit_empty() {
-        let data = Vec::new();
-        let model = Model::params().quiet(true).fit(&data).unwrap();
+        let model = Model::params().quiet(true).fit(&[]).unwrap();
         assert!(model.p_factors().is_empty());
         assert!(model.q_factors().is_empty());
         assert!(model.bias().is_nan());
@@ -335,8 +348,7 @@ mod tests {
 
     #[test]
     fn test_fit_eval_empty() {
-        let data = Vec::new();
-        let model = Model::params().quiet(true).fit_eval(&data, &data).unwrap();
+        let model = Model::params().quiet(true).fit_eval(&[], &[]).unwrap();
         assert!(model.p_factors().is_empty());
         assert!(model.q_factors().is_empty());
         assert!(model.bias().is_nan());

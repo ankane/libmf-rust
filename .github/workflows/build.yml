@@ -15,3 +15,6 @@ jobs:
       # build for no_std to catch errors
       - run: cargo build --no-default-features
       - run: cargo test --no-default-features
+      # build for no_std to catch errors
+      - run: cargo build --no-default-features --features alloc
+      - run: cargo test --no-default-features --features alloc

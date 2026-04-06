@@ -1,4 +1,3 @@
-use alloc::ffi::NulError;
 use core::error;
 use core::fmt;
 
@@ -22,8 +21,9 @@ impl fmt::Display for Error {
     }
 }
 
-impl From<NulError> for Error {
-    fn from(_err: NulError) -> Error {
+#[cfg(feature = "alloc")]
+impl From<alloc::ffi::NulError> for Error {
+    fn from(_err: alloc::ffi::NulError) -> Error {
         Error::Io
     }
 }

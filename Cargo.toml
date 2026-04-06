@@ -20,5 +20,6 @@ doctest = false
 cc = "1.0"
 
 [features]
+alloc = []
 default = ["std"]
-std = []
+std = ["alloc"]
