@@ -8,11 +8,11 @@ impl TryFrom<&[MfNode]> for MfProblem {
         let mut umax = -1;
         let mut vmax = -1;
         for (i, x) in data.iter().enumerate() {
-            if x.0 < 0 || x.0 >= i32::MAX {
+            if x.0 < 0 || x.0 == i32::MAX {
                 return Err(Error::Node(i));
             }
 
-            if x.1 < 0 || x.1 >= i32::MAX {
+            if x.1 < 0 || x.1 == i32::MAX {
                 return Err(Error::Node(i));
             }
 
