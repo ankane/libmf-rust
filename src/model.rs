@@ -105,45 +105,45 @@ impl Model {
     }
 
     /// Calculates RMSE (for real-valued MF).
-    pub fn rmse(&self, data: &[Node]) -> f64 {
-        let prob = data.into();
-        unsafe { calc_rmse(&prob, self.model) }
+    pub fn rmse(&self, data: &[Node]) -> Result<f64, Error> {
+        let prob = data.try_into()?;
+        Ok(unsafe { calc_rmse(&prob, self.model) })
     }
 
     /// Calculates MAE (for real-valued MF).
-    pub fn mae(&self, data: &[Node]) -> f64 {
-        let prob = data.into();
-        unsafe { calc_mae(&prob, self.model) }
+    pub fn mae(&self, data: &[Node]) -> Result<f64, Error> {
+        let prob = data.try_into()?;
+        Ok(unsafe { calc_mae(&prob, self.model) })
     }
 
     /// Calculates generalized KL-divergence (for non-negative real-valued MF).
-    pub fn gkl(&self, data: &[Node]) -> f64 {
-        let prob = data.into();
-        unsafe { calc_gkl(&prob, self.model) }
+    pub fn gkl(&self, data: &[Node]) -> Result<f64, Error> {
+        let prob = data.try_into()?;
+        Ok(unsafe { calc_gkl(&prob, self.model) })
     }
 
     /// Calculates logarithmic loss (for binary MF).
-    pub fn logloss(&self, data: &[Node]) -> f64 {
-        let prob = data.into();
-        unsafe { calc_logloss(&prob, self.model) }
+    pub fn logloss(&self, data: &[Node]) -> Result<f64, Error> {
+        let prob = data.try_into()?;
+        Ok(unsafe { calc_logloss(&prob, self.model) })
     }
 
     /// Calculates accuracy (for binary MF).
-    pub fn accuracy(&self, data: &[Node]) -> f64 {
-        let prob = data.into();
-        unsafe { calc_accuracy(&prob, self.model) }
+    pub fn accuracy(&self, data: &[Node]) -> Result<f64, Error> {
+        let prob = data.try_into()?;
+        Ok(unsafe { calc_accuracy(&prob, self.model) })
     }
 
     /// Calculates MPR (for one-class MF).
-    pub fn mpr(&self, data: &[Node], transpose: bool) -> f64 {
-        let prob = data.into();
-        unsafe { calc_mpr(&prob, self.model, transpose) }
+    pub fn mpr(&self, data: &[Node], transpose: bool) -> Result<f64, Error> {
+        let prob = data.try_into()?;
+        Ok(unsafe { calc_mpr(&prob, self.model, transpose) })
     }
 
     /// Calculates AUC (for one-class MF).
-    pub fn auc(&self, data: &[Node], transpose: bool) -> f64 {
-        let prob = data.into();
-        unsafe { calc_auc(&prob, self.model, transpose) }
+    pub fn auc(&self, data: &[Node], transpose: bool) -> Result<f64, Error> {
+        let prob = data.try_into()?;
+        Ok(unsafe { calc_auc(&prob, self.model, transpose) })
     }
 }
 
@@ -264,13 +264,13 @@ mod tests {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        assert!(model.rmse(&data) < 0.15);
-        assert!(model.mae(&data) < 0.15);
-        assert!(model.gkl(&data) < 0.01);
-        assert!(model.logloss(&data) < 0.3);
-        assert_eq!(1.0, model.accuracy(&data));
-        assert_eq!(0.0, model.mpr(&data, false));
-        assert_eq!(1.0, model.auc(&data, false));
+        assert!(model.rmse(&data).unwrap() < 0.15);
+        assert!(model.mae(&data).unwrap() < 0.15);
+        assert!(model.gkl(&data).unwrap() < 0.01);
+        assert!(model.logloss(&data).unwrap() < 0.3);
+        assert_eq!(1.0, model.accuracy(&data).unwrap());
+        assert_eq!(0.0, model.mpr(&data, false).unwrap());
+        assert_eq!(1.0, model.auc(&data, false).unwrap());
     }
 
     #[test]
@@ -278,13 +278,13 @@ mod tests {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        assert_eq!(0.0, model.rmse(&[]));
-        assert_eq!(0.0, model.mae(&[]));
-        assert_eq!(0.0, model.gkl(&[]));
-        assert_eq!(0.0, model.logloss(&[]));
-        assert_eq!(0.0, model.accuracy(&[]));
-        assert!(model.mpr(&[], false).is_nan());
-        assert!(model.auc(&[], false).is_nan());
+        assert_eq!(0.0, model.rmse(&[]).unwrap());
+        assert_eq!(0.0, model.mae(&[]).unwrap());
+        assert_eq!(0.0, model.gkl(&[]).unwrap());
+        assert_eq!(0.0, model.logloss(&[]).unwrap());
+        assert_eq!(0.0, model.accuracy(&[]).unwrap());
+        assert!(model.mpr(&[], false).unwrap().is_nan());
+        assert!(model.auc(&[], false).unwrap().is_nan());
     }
 
     #[test]

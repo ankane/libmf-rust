@@ -5,6 +5,7 @@ use core::fmt;
 #[derive(Debug, Eq, PartialEq)]
 pub enum Error {
     Io,
+    Node(usize),
     Parameter(&'static str),
     Unknown,
 }
@@ -15,6 +16,7 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Error::Io => f.write_str("cannot open file"),
+            Error::Node(index) => write!(f, "invalid node at index {}", index),
             Error::Parameter(err) => f.write_str(err),
             Error::Unknown => f.write_str("unknown error"),
         }

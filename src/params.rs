@@ -104,7 +104,7 @@ impl Params {
             return Err(Error::Parameter("no data"));
         }
 
-        let prob = data.into();
+        let prob = data.try_into()?;
         let param = self.build_param()?;
         let model = unsafe { mf_train(&prob, param) };
         if model.is_null() {
@@ -120,8 +120,8 @@ impl Params {
             return Err(Error::Parameter("no data"));
         }
 
-        let tr = train_set.into();
-        let va = eval_set.into();
+        let tr = train_set.try_into()?;
+        let va = eval_set.try_into()?;
         let param = self.build_param()?;
         let model = unsafe { mf_train_with_validation(&tr, &va, param) };
         if model.is_null() {
@@ -137,7 +137,7 @@ impl Params {
             return Err(Error::Parameter("no data"));
         }
 
-        let prob = data.into();
+        let prob = data.try_into()?;
         let param = self.build_param()?;
         let avg_error = unsafe { mf_cross_validation(&prob, folds, param) };
         // TODO update fork to differentiate between bad parameters and zero error
