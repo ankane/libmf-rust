@@ -106,43 +106,43 @@ impl Model {
 
     /// Calculates RMSE (for real-valued MF).
     pub fn rmse(&self, data: &[Node]) -> f64 {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         unsafe { calc_rmse(&prob, self.model) }
     }
 
     /// Calculates MAE (for real-valued MF).
     pub fn mae(&self, data: &[Node]) -> f64 {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         unsafe { calc_mae(&prob, self.model) }
     }
 
     /// Calculates generalized KL-divergence (for non-negative real-valued MF).
     pub fn gkl(&self, data: &[Node]) -> f64 {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         unsafe { calc_gkl(&prob, self.model) }
     }
 
     /// Calculates logarithmic loss (for binary MF).
     pub fn logloss(&self, data: &[Node]) -> f64 {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         unsafe { calc_logloss(&prob, self.model) }
     }
 
     /// Calculates accuracy (for binary MF).
     pub fn accuracy(&self, data: &[Node]) -> f64 {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         unsafe { calc_accuracy(&prob, self.model) }
     }
 
     /// Calculates MPR (for one-class MF).
     pub fn mpr(&self, data: &[Node], transpose: bool) -> f64 {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         unsafe { calc_mpr(&prob, self.model, transpose) }
     }
 
     /// Calculates AUC (for one-class MF).
     pub fn auc(&self, data: &[Node], transpose: bool) -> f64 {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         unsafe { calc_auc(&prob, self.model, transpose) }
     }
 }

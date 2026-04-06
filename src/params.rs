@@ -99,7 +99,7 @@ impl Params {
 
     /// Fits a model.
     pub fn fit(&mut self, data: &[Node]) -> Result<Model, Error> {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         let param = self.build_param()?;
         let model = unsafe { mf_train(&prob, param) };
         if model.is_null() {
@@ -110,8 +110,8 @@ impl Params {
 
     /// Fits a model and performs cross-validation.
     pub fn fit_eval(&mut self, train_set: &[Node], eval_set: &[Node]) -> Result<Model, Error> {
-        let tr = MfProblem::from(train_set);
-        let va = MfProblem::from(eval_set);
+        let tr = train_set.into();
+        let va = eval_set.into();
         let param = self.build_param()?;
         let model = unsafe { mf_train_with_validation(&tr, &va, param) };
         if model.is_null() {
@@ -122,7 +122,7 @@ impl Params {
 
     /// Performs cross-validation.
     pub fn cv(&mut self, data: &[Node], folds: i32) -> Result<f64, Error> {
-        let prob = MfProblem::from(data);
+        let prob = data.into();
         let param = self.build_param()?;
         let avg_error = unsafe { mf_cross_validation(&prob, folds, param) };
         // TODO update fork to differentiate between bad parameters and zero error
