@@ -94,20 +94,20 @@ extern "C" {
 
 impl From<&[MfNode]> for MfProblem {
     fn from(data: &[MfNode]) -> Self {
-        let mut m = -1;
-        let mut n = -1;
+        let mut umax = -1;
+        let mut vmax = -1;
         for x in data {
             // TODO return error
             assert!(x.0 >= 0);
             assert!(x.1 >= 0);
 
-            m = m.max(x.0);
-            n = n.max(x.1);
+            umax = umax.max(x.0);
+            vmax = vmax.max(x.1);
         }
 
         MfProblem {
-            m: m + 1,
-            n: n + 1,
+            m: umax + 1,
+            n: vmax + 1,
             nnz: data.len().try_into().unwrap(),
             r: data.as_ptr(),
         }
