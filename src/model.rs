@@ -274,6 +274,20 @@ mod tests {
     }
 
     #[test]
+    fn test_metrics_empty() {
+        let data = generate_data();
+        let model = Model::params().quiet(true).fit(&data).unwrap();
+
+        assert_eq!(0.0, model.rmse(&[]));
+        assert_eq!(0.0, model.mae(&[]));
+        assert_eq!(0.0, model.gkl(&[]));
+        assert_eq!(0.0, model.logloss(&[]));
+        assert_eq!(0.0, model.accuracy(&[]));
+        assert!(model.mpr(&[], false).is_nan());
+        assert!(model.auc(&[], false).is_nan());
+    }
+
+    #[test]
     fn test_predict_out_of_range() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
