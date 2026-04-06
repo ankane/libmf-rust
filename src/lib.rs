@@ -6,6 +6,7 @@ mod bindings;
 mod error;
 mod model;
 mod params;
+mod problem;
 
 pub use bindings::Loss;
 pub use bindings::MfNode as Node;
