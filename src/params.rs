@@ -99,6 +99,10 @@ impl Params {
 
     /// Fits a model.
     pub fn fit(&mut self, data: &[Node]) -> Result<Model, Error> {
+        if data.is_empty() {
+            return Err(Error::Parameter("no data"));
+        }
+
         let prob = data.into();
         let param = self.build_param()?;
         let model = unsafe { mf_train(&prob, param) };
@@ -110,6 +114,10 @@ impl Params {
 
     /// Fits a model and performs cross-validation.
     pub fn fit_eval(&mut self, train_set: &[Node], eval_set: &[Node]) -> Result<Model, Error> {
+        if train_set.is_empty() || eval_set.is_empty() {
+            return Err(Error::Parameter("no data"));
+        }
+
         let tr = train_set.into();
         let va = eval_set.into();
         let param = self.build_param()?;

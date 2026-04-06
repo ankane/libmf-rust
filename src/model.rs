@@ -282,18 +282,14 @@ mod tests {
 
     #[test]
     fn test_fit_empty() {
-        let model = Model::params().quiet(true).fit(&[]).unwrap();
-        assert!(model.p_factors().is_empty());
-        assert!(model.q_factors().is_empty());
-        assert!(model.bias().is_nan());
+        let result = Model::params().quiet(true).fit(&[]);
+        assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
     }
 
     #[test]
     fn test_fit_eval_empty() {
-        let model = Model::params().quiet(true).fit_eval(&[], &[]).unwrap();
-        assert!(model.p_factors().is_empty());
-        assert!(model.q_factors().is_empty());
-        assert!(model.bias().is_nan());
+        let result = Model::params().quiet(true).fit_eval(&[], &[]);
+        assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
     }
 
     #[test]
