@@ -1,6 +1,7 @@
 ## 0.4.0 (unreleased)
 
 - Added support for `no_std`
+- Changed default value of `quiet` from `false` to `true`
 - Removed `Matrix` (use `Vec<Node>` instead)
 
 ## 0.3.0 (2024-07-10)
