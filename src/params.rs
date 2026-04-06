@@ -1,6 +1,5 @@
 use crate::bindings::*;
 use crate::{Error, Loss, Matrix, Model};
-use alloc::string::ToString;
 
 /// A set of parameters.
 pub struct Params {
@@ -139,25 +138,25 @@ impl Params {
 
         if param.k < 1 {
             return Err(Error::Parameter(
-                "number of factors must be greater than zero".to_string(),
+                "number of factors must be greater than zero",
             ));
         }
 
         if param.nr_threads < 1 {
             return Err(Error::Parameter(
-                "number of threads must be greater than zero".to_string(),
+                "number of threads must be greater than zero",
             ));
         }
 
         if param.nr_bins < 1 || param.nr_bins < param.nr_threads {
             return Err(Error::Parameter(
-                "number of bins must be greater than number of threads".to_string(),
+                "number of bins must be greater than number of threads",
             ));
         }
 
         if param.nr_iters < 1 {
             return Err(Error::Parameter(
-                "number of iterations must be greater than zero".to_string(),
+                "number of iterations must be greater than zero",
             ));
         }
 
@@ -167,26 +166,22 @@ impl Params {
             || param.lambda_q2 < 0.0
         {
             return Err(Error::Parameter(
-                "regularization coefficient must be non-negative".to_string(),
+                "regularization coefficient must be non-negative",
             ));
         }
 
         if param.eta <= 0.0 {
-            return Err(Error::Parameter(
-                "learning rate must be greater than zero".to_string(),
-            ));
+            return Err(Error::Parameter("learning rate must be greater than zero"));
         }
 
         if matches!(param.fun, Loss::RealKL) && !param.do_nmf {
             return Err(Error::Parameter(
-                "nmf must be set when using generalized KL-divergence".to_string(),
+                "nmf must be set when using generalized KL-divergence",
             ));
         }
 
         if param.alpha < 0.0 {
-            return Err(Error::Parameter(
-                "alpha must be a non-negative number".to_string(),
-            ));
+            return Err(Error::Parameter("alpha must be a non-negative number"));
         }
 
         Ok(param)

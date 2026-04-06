@@ -185,7 +185,6 @@ impl Drop for Model {
 
 #[cfg(test)]
 mod tests {
-    use crate::alloc::string::ToString;
     use crate::{Error, Loss, Matrix, Model};
     use alloc::vec::Vec;
 
@@ -351,7 +350,7 @@ mod tests {
         let result = Model::params().factors(0).fit(&data);
         assert_eq!(
             result.unwrap_err(),
-            Error::Parameter("number of factors must be greater than zero".to_string())
+            Error::Parameter("number of factors must be greater than zero")
         );
     }
 
@@ -361,7 +360,7 @@ mod tests {
         let result = Model::params().factors(0).fit_eval(&data, &data);
         assert_eq!(
             result.unwrap_err(),
-            Error::Parameter("number of factors must be greater than zero".to_string())
+            Error::Parameter("number of factors must be greater than zero")
         );
     }
 
@@ -371,7 +370,7 @@ mod tests {
         let result = Model::params().factors(0).cv(&data, 5);
         assert_eq!(
             result.unwrap_err(),
-            Error::Parameter("number of factors must be greater than zero".to_string())
+            Error::Parameter("number of factors must be greater than zero")
         );
     }
 }
