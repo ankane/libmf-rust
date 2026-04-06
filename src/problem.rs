@@ -20,10 +20,15 @@ impl TryFrom<&[MfNode]> for MfProblem {
             vmax = vmax.max(x.1);
         }
 
+        let nnz = data
+            .len()
+            .try_into()
+            .map_err(|_| Error::Parameter("too much data"))?;
+
         Ok(MfProblem {
             m: umax + 1,
             n: vmax + 1,
-            nnz: data.len().try_into().unwrap(),
+            nnz,
             r: data.as_ptr(),
         })
     }
