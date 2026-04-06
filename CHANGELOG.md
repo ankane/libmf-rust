@@ -1,4 +1,4 @@
-## 0.3.1 (unreleased)
+## 0.4.0 (unreleased)
 
 - Added experimental support for `no_std`
 
