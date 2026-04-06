@@ -3,9 +3,6 @@ use crate::{Error, Node, Params};
 use core::ffi::CStr;
 use core::slice::Chunks;
 
-#[cfg(feature = "std")]
-use std::path::Path;
-
 /// A model.
 #[derive(Debug)]
 pub struct Model {
@@ -19,23 +16,12 @@ impl Model {
     }
 
     /// Loads a model from a file.
-    #[cfg(feature = "std")]
-    pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
-        Self::load_cstr(&alloc::ffi::CString::new(
-            path.as_ref().to_str().ok_or(Error::Io)?,
-        )?)
-    }
-
-    /// Loads a model from a file.
-    #[cfg(all(feature = "alloc", not(feature = "std")))]
-    pub fn load(path: &str) -> Result<Self, Error> {
-        Self::load_cstr(&alloc::ffi::CString::new(path)?)
-    }
-
-    /// Loads a model from a file.
-    #[cfg(not(feature = "alloc"))]
     pub fn load(path: &CStr) -> Result<Self, Error> {
-        Self::load_cstr(path)
+        let model = unsafe { mf_load_model(path.as_ptr()) };
+        if model.is_null() {
+            return Err(Error::Io);
+        }
+        Ok(Model { model })
     }
 
     /// Returns the predicted value for a row and column.
@@ -44,23 +30,12 @@ impl Model {
     }
 
     /// Saves the model to a file.
-    #[cfg(feature = "std")]
-    pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
-        self.save_cstr(&alloc::ffi::CString::new(
-            path.as_ref().to_str().ok_or(Error::Io)?,
-        )?)
-    }
-
-    /// Saves the model to a file.
-    #[cfg(all(feature = "alloc", not(feature = "std")))]
-    pub fn save(&self, path: &str) -> Result<(), Error> {
-        self.save_cstr(&alloc::ffi::CString::new(path)?)
-    }
-
-    /// Saves the model to a file.
-    #[cfg(not(feature = "alloc"))]
     pub fn save(&self, path: &CStr) -> Result<(), Error> {
-        self.save_cstr(path)
+        let status = unsafe { mf_save_model(self.model, path.as_ptr()) };
+        if status != 0 {
+            return Err(Error::Io);
+        }
+        Ok(())
     }
 
     /// Returns the number of rows.
@@ -170,22 +145,6 @@ impl Model {
         let prob = MfProblem::from(data);
         unsafe { calc_auc(&prob, self.model, transpose) }
     }
-
-    fn load_cstr(path: &CStr) -> Result<Self, Error> {
-        let model = unsafe { mf_load_model(path.as_ptr()) };
-        if model.is_null() {
-            return Err(Error::Io);
-        }
-        Ok(Model { model })
-    }
-
-    fn save_cstr(&self, path: &CStr) -> Result<(), Error> {
-        let status = unsafe { mf_save_model(self.model, path.as_ptr()) };
-        if status != 0 {
-            return Err(Error::Io);
-        }
-        Ok(())
-    }
 }
 
 impl Drop for Model {
@@ -204,10 +163,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "alloc")]
     fn test_fit() {
-        use alloc::vec::Vec;
-
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
         model.predict(0, 1);
@@ -218,32 +174,24 @@ mod tests {
         let p_factors = model.p_factors();
         let q_factors = model.q_factors();
 
-        assert_eq!(model.p_iter().len(), 2);
-        assert_eq!(model.q_iter().len(), 2);
+        assert_eq!(model.p(0), Some(&p_factors[0..8]));
+        assert_eq!(model.p(1), Some(&p_factors[8..]));
 
-        let p_vec = model.p_iter().collect::<Vec<&[f32]>>();
-        let q_vec = model.q_iter().collect::<Vec<&[f32]>>();
+        assert_eq!(model.q(0), Some(&q_factors[0..8]));
+        assert_eq!(model.q(1), Some(&q_factors[8..]));
 
-        assert_eq!(p_vec[0], &p_factors[0..8]);
-        assert_eq!(p_vec[1], &p_factors[8..]);
+        let mut p_iter = model.p_iter();
+        let mut q_iter = model.q_iter();
 
-        assert_eq!(q_vec[0], &q_factors[0..8]);
-        assert_eq!(q_vec[1], &q_factors[8..]);
+        assert_eq!(p_iter.len(), 2);
+        assert_eq!(q_iter.len(), 2);
 
-        for (i, factors) in model.p_iter().enumerate() {
-            assert_eq!(factors, p_vec[i]);
-        }
-
-        for (i, factors) in model.q_iter().enumerate() {
-            assert_eq!(factors, q_vec[i]);
-        }
-
-        assert_eq!(model.p(0), Some(p_vec[0]));
-        assert_eq!(model.p(1), Some(p_vec[1]));
+        assert_eq!(model.p(0), p_iter.next());
+        assert_eq!(model.p(1), p_iter.next());
         assert_eq!(model.p(2), None);
 
-        assert_eq!(model.q(0), Some(q_vec[0]));
-        assert_eq!(model.q(1), Some(q_vec[1]));
+        assert_eq!(model.q(0), q_iter.next());
+        assert_eq!(model.q(1), q_iter.next());
         assert_eq!(model.q(2), None);
     }
 
@@ -284,15 +232,11 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_save_load() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        let mut path = std::env::temp_dir();
-        path.push("model.txt");
-        let path = path.to_str().unwrap();
-
+        let path = c"/tmp/model.txt";
         model.save(path).unwrap();
         let model = Model::load(path).unwrap();
 
@@ -302,18 +246,16 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "alloc")]
     fn test_save_missing() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
-        let result = model.save("missing/model.txt");
+        let result = model.save(c"missing/model.txt");
         assert_eq!(result.unwrap_err(), Error::Io);
     }
 
     #[test]
-    #[cfg(feature = "alloc")]
     fn test_load_missing() {
-        let result = Model::load("missing.txt");
+        let result = Model::load(c"missing.txt");
         assert_eq!(result.unwrap_err(), Error::Io);
     }
 

@@ -1,7 +1,6 @@
 ## 0.4.0 (unreleased)
 
-- Added `alloc` and `std` features
-- Added experimental support for `no_std`
+- Added support for `no_std`
 - Removed `Matrix` (use `Vec<Node>` instead)
 
 ## 0.3.0 (2024-07-10)

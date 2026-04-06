@@ -20,10 +20,3 @@ impl fmt::Display for Error {
         }
     }
 }
-
-#[cfg(feature = "alloc")]
-impl From<alloc::ffi::NulError> for Error {
-    fn from(_err: alloc::ffi::NulError) -> Error {
-        Error::Io
-    }
-}
