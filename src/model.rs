@@ -236,7 +236,7 @@ mod tests {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        let path = c"/tmp/model.txt";
+        let path = c"target/model.txt";
         model.save(path).unwrap();
         let model = Model::load(path).unwrap();
 
