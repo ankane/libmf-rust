@@ -28,7 +28,7 @@ data.push(1, 1, 4.0);
 Fit a model
 
 ```rust
-let model = libmf::Model::params().fit(&data).unwrap();
+let model = libmf::Model::params().fit(&data)?;
 ```
 
 Make predictions
@@ -56,19 +56,19 @@ model.bias();
 Save the model to a file
 
 ```rust
-model.save("model.txt").unwrap();
+model.save("model.txt")?;
 ```
 
 Load a model from a file
 
 ```rust
-let model = libmf::Model::load("model.txt").unwrap();
+let model = libmf::Model::load("model.txt")?;
 ```
 
 Pass a validation set
 
 ```rust
-let model = libmf::Model::params().fit_eval(&train_set, &eval_set).unwrap();
+let model = libmf::Model::params().fit_eval(&train_set, &eval_set)?;
 ```
 
 ## Cross-Validation
@@ -76,7 +76,7 @@ let model = libmf::Model::params().fit_eval(&train_set, &eval_set).unwrap();
 Perform cross-validation
 
 ```rust
-let avg_error = libmf::Model::params().cv(&data, 5).unwrap();
+let avg_error = libmf::Model::params().cv(&data, 5)?;
 ```
 
 ## Parameters
@@ -84,7 +84,7 @@ let avg_error = libmf::Model::params().cv(&data, 5).unwrap();
 Set parameters - default values below
 
 ```rust
-libmf::Model::params()
+let model = libmf::Model::params()
     .loss(libmf::Loss::RealL2)     // loss function
     .factors(8)                    // number of latent factors
     .threads(12)                   // number of threads
@@ -98,7 +98,8 @@ libmf::Model::params()
     .alpha(1.0)                    // importance of negative entries
     .c(0.0001)                     // desired value of negative entries
     .nmf(false)                    // perform non-negative MF (NMF)
-    .quiet(false);                 // no outputs to stdout
+    .quiet(false)                  // no outputs to stdout
+    .fit(&data)?;
 ```
 
 ### Loss Functions
