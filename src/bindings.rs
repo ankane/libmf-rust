@@ -94,12 +94,16 @@ extern "C" {
 
 impl From<&[MfNode]> for MfProblem {
     fn from(data: &[MfNode]) -> Self {
-        let m = data.iter().map(|x| x.0).max().unwrap_or(-1) + 1;
-        let n = data.iter().map(|x| x.1).max().unwrap_or(-1) + 1;
+        let mut m = -1;
+        let mut n = -1;
+        for x in data {
+            m = m.max(x.0);
+            n = n.max(x.1);
+        }
 
         MfProblem {
-            m,
-            n,
+            m: m + 1,
+            n: n + 1,
             nnz: data.len() as i64,
             r: data.as_ptr(),
         }
