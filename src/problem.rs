@@ -6,8 +6,8 @@ impl From<&[MfNode]> for MfProblem {
         let mut vmax = -1;
         for x in data {
             // TODO return error
-            assert!(x.0 >= 0);
-            assert!(x.1 >= 0);
+            assert!(x.0 >= 0 && x.0 < i32::MAX);
+            assert!(x.1 >= 0 && x.1 < i32::MAX);
 
             umax = umax.max(x.0);
             vmax = vmax.max(x.1);
