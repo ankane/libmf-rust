@@ -104,7 +104,7 @@ impl From<&[MfNode]> for MfProblem {
         MfProblem {
             m: m + 1,
             n: n + 1,
-            nnz: data.len() as i64,
+            nnz: data.len().try_into().unwrap(),
             r: data.as_ptr(),
         }
     }
