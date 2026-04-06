@@ -1,7 +1,7 @@
 use crate::bindings::*;
 use crate::{Error, Matrix, Params};
 use alloc::ffi::CString;
-use alloc::slice::Chunks;
+use core::slice::Chunks;
 
 #[cfg(feature = "std")]
 use std::path::Path;
