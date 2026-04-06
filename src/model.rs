@@ -210,14 +210,26 @@ mod tests {
     }
 
     #[test]
-    fn test_fit_negative_row_index() {
+    fn test_negative_row_index() {
         let result = Model::params().quiet(true).fit(&[Node(-1, 0, 1.0)]);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
     #[test]
-    fn test_fit_negative_column_index() {
+    fn test_max_row_index() {
+        let result = Model::params().quiet(true).fit(&[Node(i32::MAX, 0, 1.0)]);
+        assert_eq!(result.unwrap_err(), Error::Node(0));
+    }
+
+    #[test]
+    fn test_negative_column_index() {
         let result = Model::params().quiet(true).fit(&[Node(0, -1, 1.0)]);
+        assert_eq!(result.unwrap_err(), Error::Node(0));
+    }
+
+    #[test]
+    fn test_max_column_index() {
+        let result = Model::params().quiet(true).fit(&[Node(0, i32::MAX, 1.0)]);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
