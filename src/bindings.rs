@@ -97,6 +97,10 @@ impl From<&[MfNode]> for MfProblem {
         let mut m = -1;
         let mut n = -1;
         for x in data {
+            // TODO return error
+            assert!(x.0 >= 0);
+            assert!(x.1 >= 0);
+
             m = m.max(x.0);
             n = n.max(x.1);
         }
