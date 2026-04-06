@@ -132,6 +132,11 @@ impl Params {
 
     /// Performs cross-validation.
     pub fn cv(&mut self, data: &[Node], folds: i32) -> Result<f64, Error> {
+        // prevent "posix_memalign() invalid size value: 0" with Valgrind
+        if data.is_empty() {
+            return Err(Error::Parameter("no data"));
+        }
+
         let prob = data.into();
         let param = self.build_param()?;
         let avg_error = unsafe { mf_cross_validation(&prob, folds, param) };

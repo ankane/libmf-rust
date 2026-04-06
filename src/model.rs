@@ -307,6 +307,12 @@ mod tests {
     }
 
     #[test]
+    fn test_cv_empty() {
+        let result = Model::params().quiet(true).cv(&[], 5);
+        assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
+    }
+
+    #[test]
     fn test_fit_bad_params() {
         let data = generate_data();
         let result = Model::params().factors(0).fit(&data);
