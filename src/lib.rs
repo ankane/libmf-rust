@@ -8,8 +8,7 @@ mod model;
 mod params;
 mod problem;
 
-pub use bindings::Loss;
-pub use bindings::MfNode as Node;
+pub use bindings::{Loss, Node};
 pub use error::Error;
 pub use model::Model;
 pub use params::Params;

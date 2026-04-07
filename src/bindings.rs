@@ -2,7 +2,7 @@ use core::ffi::{c_char, c_double, c_float, c_int, c_longlong};
 
 /// A sparse matrix element.
 #[repr(C)]
-pub struct MfNode(
+pub struct Node(
     /// Row index.
     pub c_int,
     /// Column index.
@@ -16,7 +16,7 @@ pub struct MfProblem {
     pub m: c_int,
     pub n: c_int,
     pub nnz: c_longlong,
-    pub r: *const MfNode,
+    pub r: *const Node,
 }
 
 #[repr(C)]

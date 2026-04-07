@@ -2,10 +2,10 @@ use crate::bindings::*;
 use crate::Error;
 use core::ffi::c_int;
 
-impl TryFrom<&[MfNode]> for MfProblem {
+impl TryFrom<&[Node]> for MfProblem {
     type Error = Error;
 
-    fn try_from(data: &[MfNode]) -> Result<Self, Self::Error> {
+    fn try_from(data: &[Node]) -> Result<Self, Self::Error> {
         let mut umax = -1;
         let mut vmax = -1;
         for (i, x) in data.iter().enumerate() {
