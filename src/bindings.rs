@@ -1,5 +1,6 @@
 use core::ffi::{c_char, c_double, c_float, c_int, c_longlong};
 
+/// A sparse matrix element.
 #[repr(C)]
 pub struct MfNode(pub c_int, pub c_int, pub c_float);
 
