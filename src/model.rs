@@ -202,6 +202,29 @@ mod tests {
     }
 
     #[test]
+    fn test_fit_eval_extra() {
+        let data = generate_data();
+        let model = Model::params()
+            .fit_eval(&data, &[Node(1000000, 1000000, 1.0)])
+            .unwrap();
+        assert_eq!(model.rows(), 2);
+        assert_eq!(model.columns(), 2);
+    }
+
+    #[test]
+    fn test_fit_eval_extra_one_class_l2() {
+        let data = generate_data();
+        let result = Model::params()
+            .loss(Loss::OneClassL2)
+            .quiet(false)
+            .fit_eval(&data, &[Node(1000000, 1000000, 1.0)]);
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("extra indices in eval set not supported for OneClassL2 loss")
+        );
+    }
+
+    #[test]
     fn test_cv() {
         let data = generate_data();
         let avg_error = Model::params().cv(&data, 5).unwrap();

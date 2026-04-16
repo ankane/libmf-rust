@@ -121,9 +121,17 @@ impl Params {
             return Err(Error::Parameter("no data"));
         }
 
-        let tr = train_set.try_into()?;
-        let va = eval_set.try_into()?;
+        let tr: MfProblem = train_set.try_into()?;
+        let va: MfProblem = eval_set.try_into()?;
         let param = self.build_param()?;
+
+        // LIBMF does not handle this case
+        if matches!(param.fun, Loss::OneClassL2) && (va.m > tr.m || va.n > tr.n) {
+            return Err(Error::Parameter(
+                "extra indices in eval set not supported for OneClassL2 loss",
+            ));
+        }
+
         let model = unsafe { mf_train_with_validation(&tr, &va, param) };
         if model.is_null() {
             return Err(Error::Unknown);
