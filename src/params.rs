@@ -126,10 +126,18 @@ impl Params {
         let param = self.build_param()?;
 
         // LIBMF does not handle this case
-        if matches!(param.fun, Loss::OneClassL2) && (va.m > tr.m || va.n > tr.n) {
-            return Err(Error::Parameter(
-                "extra indices in eval set not supported for OneClassL2 loss",
-            ));
+        if matches!(param.fun, Loss::OneClassL2) {
+            if va.m > tr.m {
+                return Err(Error::Parameter(
+                    "eval set cannot have extra rows for OneClassL2 loss",
+                ));
+            }
+
+            if va.n > tr.n {
+                return Err(Error::Parameter(
+                    "eval set cannot have extra columns for OneClassL2 loss",
+                ));
+            }
         }
 
         let model = unsafe { mf_train_with_validation(&tr, &va, param) };

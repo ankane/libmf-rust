@@ -212,15 +212,28 @@ mod tests {
     }
 
     #[test]
-    fn test_fit_eval_extra_one_class_l2() {
+    fn test_fit_eval_extra_rows_one_class_l2() {
         let data = generate_data();
         let result = Model::params()
             .loss(Loss::OneClassL2)
             .quiet(false)
-            .fit_eval(&data, &[Node(1000000, 1000000, 1.0)]);
+            .fit_eval(&data, &[Node(1000000, 1, 1.0)]);
         assert_eq!(
             result.unwrap_err(),
-            Error::Parameter("extra indices in eval set not supported for OneClassL2 loss")
+            Error::Parameter("eval set cannot have extra rows for OneClassL2 loss")
+        );
+    }
+
+    #[test]
+    fn test_fit_eval_extra_columns_one_class_l2() {
+        let data = generate_data();
+        let result = Model::params()
+            .loss(Loss::OneClassL2)
+            .quiet(false)
+            .fit_eval(&data, &[Node(1, 1000000, 1.0)]);
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("eval set cannot have extra columns for OneClassL2 loss")
         );
     }
 
