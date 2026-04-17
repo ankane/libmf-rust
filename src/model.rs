@@ -217,7 +217,6 @@ mod tests {
         let data = generate_data();
         let result = Model::params()
             .loss(Loss::OneClassL2)
-            .quiet(false)
             .fit_eval(&data, &[Node(1000000, 1, 1.0)]);
         assert_eq!(
             result.unwrap_err(),
@@ -230,7 +229,6 @@ mod tests {
         let data = generate_data();
         let result = Model::params()
             .loss(Loss::OneClassL2)
-            .quiet(false)
             .fit_eval(&data, &[Node(1, 1000000, 1.0)]);
         assert_eq!(
             result.unwrap_err(),
