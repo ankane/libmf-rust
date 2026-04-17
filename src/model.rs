@@ -205,6 +205,7 @@ mod tests {
     fn test_fit_eval_extra() {
         let data = generate_data();
         let model = Model::params()
+            .quiet(true)
             .fit_eval(&data, &[Node(1000000, 1000000, 1.0)])
             .unwrap();
         assert_eq!(model.rows(), 2);
