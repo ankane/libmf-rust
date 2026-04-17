@@ -10,7 +10,6 @@ impl Params {
     pub(crate) fn new() -> Self {
         let mut param = unsafe { mf_get_default_param() };
         param.nr_bins = 25;
-        param.quiet = true;
         Self { param }
     }
 

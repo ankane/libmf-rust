@@ -4,7 +4,6 @@
 - Changed `save` and `load` to use `&CStr` instead of `Path`
 - Changed metric methods to return `Result`
 - Changed `Error::Parameter` to use `&'static str` instead of `String`
-- Changed default value of `quiet` from `false` to `true`
 - Removed `Matrix` (use `Vec<Node>` instead)
 
 ## 0.3.0 (2024-07-10)

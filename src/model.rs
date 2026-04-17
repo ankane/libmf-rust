@@ -165,7 +165,7 @@ mod tests {
     #[test]
     fn test_fit() {
         let data = generate_data();
-        let model = Model::params().fit(&data).unwrap();
+        let model = Model::params().quiet(true).fit(&data).unwrap();
         model.predict(0, 1);
 
         // TODO assert in delta
@@ -198,7 +198,7 @@ mod tests {
     #[test]
     fn test_fit_eval() {
         let data = generate_data();
-        Model::params().fit_eval(&data, &data).unwrap();
+        Model::params().quiet(true).fit_eval(&data, &data).unwrap();
     }
 
     #[test]
@@ -240,39 +240,43 @@ mod tests {
     #[test]
     fn test_cv() {
         let data = generate_data();
-        let avg_error = Model::params().cv(&data, 5).unwrap();
+        let avg_error = Model::params().quiet(true).cv(&data, 5).unwrap();
         // not enough data
         assert!(avg_error.is_nan());
     }
 
     #[test]
     fn test_negative_row_index() {
-        let result = Model::params().fit(&[Node(-1, 0, 1.0)]);
+        let result = Model::params().quiet(true).fit(&[Node(-1, 0, 1.0)]);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
     #[test]
     fn test_max_row_index() {
-        let result = Model::params().fit(&[Node(i32::MAX, 0, 1.0)]);
+        let result = Model::params().quiet(true).fit(&[Node(i32::MAX, 0, 1.0)]);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
     #[test]
     fn test_negative_column_index() {
-        let result = Model::params().fit(&[Node(0, -1, 1.0)]);
+        let result = Model::params().quiet(true).fit(&[Node(0, -1, 1.0)]);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
     #[test]
     fn test_max_column_index() {
-        let result = Model::params().fit(&[Node(0, i32::MAX, 1.0)]);
+        let result = Model::params().quiet(true).fit(&[Node(0, i32::MAX, 1.0)]);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
     #[test]
     fn test_loss() {
         let data = generate_data();
-        let model = Model::params().loss(Loss::OneClassL2).fit(&data).unwrap();
+        let model = Model::params()
+            .loss(Loss::OneClassL2)
+            .quiet(true)
+            .fit(&data)
+            .unwrap();
         assert_eq!(model.bias(), 0.0);
     }
 
@@ -282,6 +286,7 @@ mod tests {
         assert!(Model::params()
             .loss(Loss::RealKL)
             .nmf(true)
+            .quiet(true)
             .fit(&data)
             .is_ok());
     }
@@ -289,7 +294,7 @@ mod tests {
     #[test]
     fn test_save_load() {
         let data = generate_data();
-        let model = Model::params().fit(&data).unwrap();
+        let model = Model::params().quiet(true).fit(&data).unwrap();
 
         let path = c"target/model.txt";
         model.save(path).unwrap();
@@ -303,7 +308,7 @@ mod tests {
     #[test]
     fn test_save_missing() {
         let data = generate_data();
-        let model = Model::params().fit(&data).unwrap();
+        let model = Model::params().quiet(true).fit(&data).unwrap();
         let result = model.save(c"missing/model.txt");
         assert_eq!(result.unwrap_err(), Error::Io);
     }
@@ -317,7 +322,7 @@ mod tests {
     #[test]
     fn test_metrics() {
         let data = generate_data();
-        let model = Model::params().fit(&data).unwrap();
+        let model = Model::params().quiet(true).fit(&data).unwrap();
 
         assert!(model.rmse(&data).unwrap() < 0.15);
         assert!(model.mae(&data).unwrap() < 0.15);
@@ -331,7 +336,7 @@ mod tests {
     #[test]
     fn test_metrics_empty() {
         let data = generate_data();
-        let model = Model::params().fit(&data).unwrap();
+        let model = Model::params().quiet(true).fit(&data).unwrap();
 
         assert_eq!(0.0, model.rmse(&[]).unwrap());
         assert_eq!(0.0, model.mae(&[]).unwrap());
@@ -345,25 +350,25 @@ mod tests {
     #[test]
     fn test_predict_out_of_range() {
         let data = generate_data();
-        let model = Model::params().fit(&data).unwrap();
+        let model = Model::params().quiet(true).fit(&data).unwrap();
         assert_eq!(model.bias(), model.predict(1000, 1000));
     }
 
     #[test]
     fn test_fit_empty() {
-        let result = Model::params().fit(&[]);
+        let result = Model::params().quiet(true).fit(&[]);
         assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
     }
 
     #[test]
     fn test_fit_eval_empty() {
-        let result = Model::params().fit_eval(&[], &[]);
+        let result = Model::params().quiet(true).fit_eval(&[], &[]);
         assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
     }
 
     #[test]
     fn test_cv_empty() {
-        let result = Model::params().cv(&[], 5);
+        let result = Model::params().quiet(true).cv(&[], 5);
         assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
     }
 
