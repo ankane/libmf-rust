@@ -1,5 +1,4 @@
 #![doc = include_str!("../README.md")]
-#![no_std]
 #![allow(clippy::needless_doctest_main)]
 
 mod bindings;

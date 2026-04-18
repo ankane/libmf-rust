@@ -1,8 +1,6 @@
 ## 0.4.0 (unreleased)
 
-- Added support for `no_std`
 - Added checks for invalid data
-- Changed `save` and `load` to use `&CStr` instead of `Path`
 - Changed metric methods to return `Result`
 - Changed `Error::Parameter` to use `&'static str` instead of `String`
 - Removed `Matrix` (use `Vec<Node>` instead)

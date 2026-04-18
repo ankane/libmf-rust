@@ -1,7 +1,8 @@
 use crate::bindings::*;
 use crate::{Error, Node, Params};
-use core::ffi::CStr;
 use core::slice::Chunks;
+use std::ffi::CString;
+use std::path::Path;
 
 /// A model.
 #[derive(Debug)]
@@ -16,7 +17,8 @@ impl Model {
     }
 
     /// Loads a model from a file.
-    pub fn load(path: &CStr) -> Result<Self, Error> {
+    pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
+        let path = CString::new(path.as_ref().to_str().ok_or(Error::Io)?).map_err(|_| Error::Io)?;
         let model = unsafe { mf_load_model(path.as_ptr()) };
         if model.is_null() {
             return Err(Error::Io);
@@ -30,7 +32,8 @@ impl Model {
     }
 
     /// Saves the model to a file.
-    pub fn save(&self, path: &CStr) -> Result<(), Error> {
+    pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
+        let path = CString::new(path.as_ref().to_str().ok_or(Error::Io)?).map_err(|_| Error::Io)?;
         let status = unsafe { mf_save_model(self.model, path.as_ptr()) };
         if status != 0 {
             return Err(Error::Io);
@@ -295,7 +298,7 @@ mod tests {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        let path = c"target/model.txt";
+        let path = "target/model.txt";
         model.save(path).unwrap();
         let model = Model::load(path).unwrap();
 
@@ -308,13 +311,13 @@ mod tests {
     fn test_save_missing() {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
-        let result = model.save(c"missing/model.txt");
+        let result = model.save("missing/model.txt");
         assert_eq!(result.unwrap_err(), Error::Io);
     }
 
     #[test]
     fn test_load_missing() {
-        let result = Model::load(c"missing.txt");
+        let result = Model::load("missing.txt");
         assert_eq!(result.unwrap_err(), Error::Io);
     }
 
