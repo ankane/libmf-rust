@@ -34,23 +34,23 @@ let model = libmf::Model::params().fit(&data)?;
 Make predictions
 
 ```rust
-model.predict(row_index, column_index);
+let prediction = model.predict(row_index, column_index);
 ```
 
 Get the latent factors (these approximate the training matrix)
 
 ```rust
-model.p(row_index);
-model.q(column_index);
+let p = model.p(row_index);
+let q = model.q(column_index);
 // or
-model.p_iter();
-model.q_iter();
+for p in model.p_iter() { ... }
+for q in model.q_iter() { ... }
 ```
 
 Get the bias (average of all elements in the training matrix)
 
 ```rust
-model.bias();
+let bias = model.bias();
 ```
 
 Save the model to a file
@@ -127,43 +127,43 @@ For one-class matrix factorization
 Calculate RMSE (for real-valued MF)
 
 ```rust
-model.rmse(&data);
+let rmse = model.rmse(&data);
 ```
 
 Calculate MAE (for real-valued MF)
 
 ```rust
-model.mae(&data);
+let mae = model.mae(&data);
 ```
 
 Calculate generalized KL-divergence (for non-negative real-valued MF)
 
 ```rust
-model.gkl(&data);
+let gkl = model.gkl(&data);
 ```
 
 Calculate logarithmic loss (for binary MF)
 
 ```rust
-model.logloss(&data);
+let logloss = model.logloss(&data);
 ```
 
 Calculate accuracy (for binary MF)
 
 ```rust
-model.accuracy(&data);
+let accuracy = model.accuracy(&data);
 ```
 
 Calculate MPR (for one-class MF)
 
 ```rust
-model.mpr(&data, transpose);
+let mpr = model.mpr(&data, transpose);
 ```
 
 Calculate AUC (for one-class MF)
 
 ```rust
-model.auc(&data, transpose);
+let auc = model.auc(&data, transpose);
 ```
 
 ## Example
