@@ -1,4 +1,4 @@
-## 0.4.0 (unreleased)
+## 0.4.0 (2026-04-18)
 
 - Added support for `no_std`
 - Added checks for invalid data

@@ -11,7 +11,7 @@ Check out [Disco](https://github.com/ankane/disco-rust) for higher-level collabo
 Add this line to your application’s `Cargo.toml` under `[dependencies]`:
 
 ```toml
-libmf = "0.3"
+libmf = "0.4"
 ```
 
 ## Getting Started
@@ -127,43 +127,43 @@ For one-class matrix factorization
 Calculate RMSE (for real-valued MF)
 
 ```rust
-let rmse = model.rmse(&data);
+let rmse = model.rmse(&data)?;
 ```
 
 Calculate MAE (for real-valued MF)
 
 ```rust
-let mae = model.mae(&data);
+let mae = model.mae(&data)?;
 ```
 
 Calculate generalized KL-divergence (for non-negative real-valued MF)
 
 ```rust
-let gkl = model.gkl(&data);
+let gkl = model.gkl(&data)?;
 ```
 
 Calculate logarithmic loss (for binary MF)
 
 ```rust
-let logloss = model.logloss(&data);
+let logloss = model.logloss(&data)?;
 ```
 
 Calculate accuracy (for binary MF)
 
 ```rust
-let accuracy = model.accuracy(&data);
+let accuracy = model.accuracy(&data)?;
 ```
 
 Calculate MPR (for one-class MF)
 
 ```rust
-let mpr = model.mpr(&data, transpose);
+let mpr = model.mpr(&data, transpose)?;
 ```
 
 Calculate AUC (for one-class MF)
 
 ```rust
-let auc = model.auc(&data, transpose);
+let auc = model.auc(&data, transpose)?;
 ```
 
 ## Example
