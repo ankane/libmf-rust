@@ -1,8 +1,7 @@
 use crate::bindings::*;
 use crate::{Error, Node, Params};
+use alloc::ffi::CString;
 use core::slice::Chunks;
-use std::ffi::CString;
-use std::path::Path;
 
 /// A model.
 #[derive(Debug)]
@@ -17,8 +16,8 @@ impl Model {
     }
 
     /// Loads a model from a file.
-    pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
-        let path = CString::new(path.as_ref().to_str().ok_or(Error::Io)?).map_err(|_| Error::Io)?;
+    pub fn load(path: &str) -> Result<Self, Error> {
+        let path = CString::new(path).map_err(|_| Error::Io)?;
         let model = unsafe { mf_load_model(path.as_ptr()) };
         if model.is_null() {
             return Err(Error::Io);
@@ -32,8 +31,8 @@ impl Model {
     }
 
     /// Saves the model to a file.
-    pub fn save<P: AsRef<Path>>(&self, path: P) -> Result<(), Error> {
-        let path = CString::new(path.as_ref().to_str().ok_or(Error::Io)?).map_err(|_| Error::Io)?;
+    pub fn save(&self, path: &str) -> Result<(), Error> {
+        let path = CString::new(path).map_err(|_| Error::Io)?;
         let status = unsafe { mf_save_model(self.model, path.as_ptr()) };
         if status != 0 {
             return Err(Error::Io);
