@@ -1,5 +1,5 @@
 use crate::bindings::*;
-use crate::{Error, Loss, Model, Node};
+use crate::{Error, Loss, Matrix, Model};
 
 /// A set of parameters.
 pub struct Params {
@@ -98,7 +98,7 @@ impl Params {
     }
 
     /// Fits a model.
-    pub fn fit(&self, data: &[Node]) -> Result<Model, Error> {
+    pub fn fit(&self, data: &Matrix) -> Result<Model, Error> {
         // prevent "posix_memalign() invalid size value: 0" with Valgrind
         if data.is_empty() {
             return Err(Error::Parameter("no data"));
@@ -114,7 +114,7 @@ impl Params {
     }
 
     /// Fits a model and performs cross-validation.
-    pub fn fit_eval(&self, train_set: &[Node], eval_set: &[Node]) -> Result<Model, Error> {
+    pub fn fit_eval(&self, train_set: &Matrix, eval_set: &Matrix) -> Result<Model, Error> {
         // prevent "posix_memalign() invalid size value: 0" with Valgrind
         if train_set.is_empty() || eval_set.is_empty() {
             return Err(Error::Parameter("no data"));
@@ -147,7 +147,7 @@ impl Params {
     }
 
     /// Performs cross-validation.
-    pub fn cv(&self, data: &[Node], folds: i32) -> Result<f64, Error> {
+    pub fn cv(&self, data: &Matrix, folds: i32) -> Result<f64, Error> {
         // prevent "posix_memalign() invalid size value: 0" with Valgrind
         if data.is_empty() {
             return Err(Error::Parameter("no data"));

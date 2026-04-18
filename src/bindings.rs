@@ -1,22 +1,18 @@
 use core::ffi::{c_char, c_double, c_float, c_int, c_longlong};
 
-/// A sparse matrix element.
 #[repr(C)]
-pub struct Node(
-    /// Row index.
-    pub c_int,
-    /// Column index.
-    pub c_int,
-    /// Value.
-    pub c_float,
-);
+pub struct MfNode {
+    pub u: c_int,
+    pub v: c_int,
+    pub r: c_float,
+}
 
 #[repr(C)]
 pub struct MfProblem {
     pub m: c_int,
     pub n: c_int,
     pub nnz: c_longlong,
-    pub r: *const Node,
+    pub r: *const MfNode,
 }
 
 #[repr(C)]

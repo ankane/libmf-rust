@@ -6,11 +6,13 @@ extern crate alloc;
 
 mod bindings;
 mod error;
+mod matrix;
 mod model;
 mod params;
 mod problem;
 
-pub use bindings::{Loss, Node};
+pub use bindings::Loss;
 pub use error::Error;
+pub use matrix::Matrix;
 pub use model::Model;
 pub use params::Params;

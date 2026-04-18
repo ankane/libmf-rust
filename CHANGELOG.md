@@ -5,7 +5,6 @@
 - Changed `save` and `load` to use `&str` instead of `Path`
 - Changed metric methods to return `Result`
 - Changed `Error::Parameter` to use `&'static str` instead of `String`
-- Removed `Matrix` (use `Vec<Node>` instead)
 
 ## 0.3.0 (2024-07-10)
 

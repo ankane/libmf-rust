@@ -1,5 +1,5 @@
 use crate::bindings::*;
-use crate::{Error, Node, Params};
+use crate::{Error, Matrix, Params};
 use alloc::ffi::CString;
 use core::slice::Chunks;
 
@@ -107,43 +107,43 @@ impl Model {
     }
 
     /// Calculates RMSE (for real-valued MF).
-    pub fn rmse(&self, data: &[Node]) -> Result<f64, Error> {
+    pub fn rmse(&self, data: &Matrix) -> Result<f64, Error> {
         let prob = data.try_into()?;
         Ok(unsafe { calc_rmse(&prob, self.model) })
     }
 
     /// Calculates MAE (for real-valued MF).
-    pub fn mae(&self, data: &[Node]) -> Result<f64, Error> {
+    pub fn mae(&self, data: &Matrix) -> Result<f64, Error> {
         let prob = data.try_into()?;
         Ok(unsafe { calc_mae(&prob, self.model) })
     }
 
     /// Calculates generalized KL-divergence (for non-negative real-valued MF).
-    pub fn gkl(&self, data: &[Node]) -> Result<f64, Error> {
+    pub fn gkl(&self, data: &Matrix) -> Result<f64, Error> {
         let prob = data.try_into()?;
         Ok(unsafe { calc_gkl(&prob, self.model) })
     }
 
     /// Calculates logarithmic loss (for binary MF).
-    pub fn logloss(&self, data: &[Node]) -> Result<f64, Error> {
+    pub fn logloss(&self, data: &Matrix) -> Result<f64, Error> {
         let prob = data.try_into()?;
         Ok(unsafe { calc_logloss(&prob, self.model) })
     }
 
     /// Calculates accuracy (for binary MF).
-    pub fn accuracy(&self, data: &[Node]) -> Result<f64, Error> {
+    pub fn accuracy(&self, data: &Matrix) -> Result<f64, Error> {
         let prob = data.try_into()?;
         Ok(unsafe { calc_accuracy(&prob, self.model) })
     }
 
     /// Calculates MPR (for one-class MF).
-    pub fn mpr(&self, data: &[Node], transpose: bool) -> Result<f64, Error> {
+    pub fn mpr(&self, data: &Matrix, transpose: bool) -> Result<f64, Error> {
         let prob = data.try_into()?;
         Ok(unsafe { calc_mpr(&prob, self.model, transpose) })
     }
 
     /// Calculates AUC (for one-class MF).
-    pub fn auc(&self, data: &[Node], transpose: bool) -> Result<f64, Error> {
+    pub fn auc(&self, data: &Matrix, transpose: bool) -> Result<f64, Error> {
         let prob = data.try_into()?;
         Ok(unsafe { calc_auc(&prob, self.model, transpose) })
     }
@@ -158,10 +158,14 @@ impl Drop for Model {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Error, Loss, Model, Node};
+    use crate::{Error, Loss, Matrix, Model};
 
-    fn generate_data() -> [Node; 3] {
-        [Node(0, 0, 1.0), Node(1, 0, 2.0), Node(1, 1, 1.0)]
+    fn generate_data() -> Matrix {
+        let mut data = Matrix::new();
+        data.push(0, 0, 1.0);
+        data.push(1, 0, 2.0);
+        data.push(1, 1, 1.0);
+        data
     }
 
     #[test]
@@ -205,10 +209,12 @@ mod tests {
 
     #[test]
     fn test_fit_eval_extra() {
-        let data = generate_data();
+        let train_set = generate_data();
+        let mut eval_set = Matrix::new();
+        eval_set.push(1000000, 1000000, 1.0);
         let model = Model::params()
             .quiet(true)
-            .fit_eval(&data, &[Node(1000000, 1000000, 1.0)])
+            .fit_eval(&train_set, &eval_set)
             .unwrap();
         assert_eq!(model.rows(), 2);
         assert_eq!(model.columns(), 2);
@@ -216,10 +222,12 @@ mod tests {
 
     #[test]
     fn test_fit_eval_extra_rows_one_class_l2() {
-        let data = generate_data();
+        let train_set = generate_data();
+        let mut eval_set = Matrix::new();
+        eval_set.push(1000000, 1, 1.0);
         let result = Model::params()
             .loss(Loss::OneClassL2)
-            .fit_eval(&data, &[Node(1000000, 1, 1.0)]);
+            .fit_eval(&train_set, &eval_set);
         assert_eq!(
             result.unwrap_err(),
             Error::Parameter("eval set cannot have extra rows for OneClassL2 loss")
@@ -228,10 +236,12 @@ mod tests {
 
     #[test]
     fn test_fit_eval_extra_columns_one_class_l2() {
-        let data = generate_data();
+        let train_set = generate_data();
+        let mut eval_set = Matrix::new();
+        eval_set.push(1, 1000000, 1.0);
         let result = Model::params()
             .loss(Loss::OneClassL2)
-            .fit_eval(&data, &[Node(1, 1000000, 1.0)]);
+            .fit_eval(&train_set, &eval_set);
         assert_eq!(
             result.unwrap_err(),
             Error::Parameter("eval set cannot have extra columns for OneClassL2 loss")
@@ -248,25 +258,33 @@ mod tests {
 
     #[test]
     fn test_negative_row_index() {
-        let result = Model::params().quiet(true).fit(&[Node(-1, 0, 1.0)]);
+        let mut data = Matrix::new();
+        data.push(-1, 0, 1.0);
+        let result = Model::params().quiet(true).fit(&data);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
     #[test]
     fn test_max_row_index() {
-        let result = Model::params().quiet(true).fit(&[Node(i32::MAX, 0, 1.0)]);
+        let mut data = Matrix::new();
+        data.push(i32::MAX, 0, 1.0);
+        let result = Model::params().quiet(true).fit(&data);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
     #[test]
     fn test_negative_column_index() {
-        let result = Model::params().quiet(true).fit(&[Node(0, -1, 1.0)]);
+        let mut data = Matrix::new();
+        data.push(0, -1, 1.0);
+        let result = Model::params().quiet(true).fit(&data);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
     #[test]
     fn test_max_column_index() {
-        let result = Model::params().quiet(true).fit(&[Node(0, i32::MAX, 1.0)]);
+        let mut data = Matrix::new();
+        data.push(0, i32::MAX, 1.0);
+        let result = Model::params().quiet(true).fit(&data);
         assert_eq!(result.unwrap_err(), Error::Node(0));
     }
 
@@ -339,13 +357,14 @@ mod tests {
         let data = generate_data();
         let model = Model::params().quiet(true).fit(&data).unwrap();
 
-        assert_eq!(0.0, model.rmse(&[]).unwrap());
-        assert_eq!(0.0, model.mae(&[]).unwrap());
-        assert_eq!(0.0, model.gkl(&[]).unwrap());
-        assert_eq!(0.0, model.logloss(&[]).unwrap());
-        assert_eq!(0.0, model.accuracy(&[]).unwrap());
-        assert!(model.mpr(&[], false).unwrap().is_nan());
-        assert!(model.auc(&[], false).unwrap().is_nan());
+        let empty = Matrix::new();
+        assert_eq!(0.0, model.rmse(&empty).unwrap());
+        assert_eq!(0.0, model.mae(&empty).unwrap());
+        assert_eq!(0.0, model.gkl(&empty).unwrap());
+        assert_eq!(0.0, model.logloss(&empty).unwrap());
+        assert_eq!(0.0, model.accuracy(&empty).unwrap());
+        assert!(model.mpr(&empty, false).unwrap().is_nan());
+        assert!(model.auc(&empty, false).unwrap().is_nan());
     }
 
     #[test]
@@ -357,19 +376,21 @@ mod tests {
 
     #[test]
     fn test_fit_empty() {
-        let result = Model::params().quiet(true).fit(&[]);
+        let result = Model::params().quiet(true).fit(&Matrix::new());
         assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
     }
 
     #[test]
     fn test_fit_eval_empty() {
-        let result = Model::params().quiet(true).fit_eval(&[], &[]);
+        let result = Model::params()
+            .quiet(true)
+            .fit_eval(&Matrix::new(), &Matrix::new());
         assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
     }
 
     #[test]
     fn test_cv_empty() {
-        let result = Model::params().quiet(true).cv(&[], 5);
+        let result = Model::params().quiet(true).cv(&Matrix::new(), 5);
         assert_eq!(result.unwrap_err(), Error::Parameter("no data"));
     }
 
